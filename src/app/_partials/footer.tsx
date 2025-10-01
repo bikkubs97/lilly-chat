@@ -5,7 +5,7 @@ import React from "react";
 
 export default function Footer() {
     return (
-        <footer className="bg-purple-600 backdrop-blur-md border-t mt-12 py-8 text-center">
+        <footer className="bg-black backdrop-blur-md mt-12 py-8 bg-black-500/70 shadow-sm">
 
             <p className="text-sm text-white text-center">
                 &copy; Bikku BS — Not a substitute for clinical therapy.

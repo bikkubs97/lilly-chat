@@ -31,21 +31,21 @@ export default function Homepage() {
   ];
 
   return (
-    <main className=" text-gray-900 relative overflow-hidden">
+    <main className=" text-gray-900 relative">
       {/* Aurora Background */}
       <AuroraBackground className="absolute inset-0 " >{""}</AuroraBackground>
 
       <Header />
 
       {/* Hero Section */}
-      <section className="relative max-w-7xl mx-auto px-6 py-28 flex flex-col items-center text-center space-y-8">
+      <section className="relative max-w-7xl mx-auto px-6 py-28 flex flex-col items-center text-center space-y-8 ">
         {/* Decorative Background Glow */}
         <div className="absolute inset-0 flex items-center justify-center -z-20">
           <div className="w-[28rem] h-[28rem] bg-gradient-to-tr from-pink-400/40 via-purple-400/30 to-blue-400/20 blur-3xl rounded-full animate-pulse" />
         </div>
 
         {/* Tagline */}
-        <h3 className="text-lg md:text-xl font-semibold tracking-wide text-purple-700 drop-shadow-sm">
+        <h3 className="text-lg md:text-xl font-semibold tracking-wide text-purple-400 drop-shadow-sm">
           Your AI Mental Health Companion
         </h3>
 
@@ -53,7 +53,7 @@ export default function Homepage() {
         <HeartHandshake className="w-20 h-20 text-pink-500 drop-shadow-md" />
 
         {/* Title */}
-        <h1 className="text-5xl md:text-7xl font-extrabold leading-tight">
+        <h1 className="text-5xl md:text-6xl font-extrabold leading-tight">
           <GradientText
             text="Meet Lilly"
             gradient="linear-gradient(90deg, #3b82f6 0%, #a855f7 50%, #ec4899 100%)"
@@ -61,7 +61,7 @@ export default function Homepage() {
         </h1>
 
         {/* Flipping Words */}
-        <p className="text-2xl md:text-3xl font-medium text-gray-700">
+        <p className="text-2xl md:text-3xl font-medium text-white">
           Lilly is{" "}
           <FlipWords
             words={["Safe", "Secure", "Friendly", "Anonymous", "Understanding"]}
@@ -70,7 +70,7 @@ export default function Homepage() {
             wordDelay={0.1}
           />
         </p>
-        <p className="font-bold">Chat Without creating an Account</p>
+        <p className="font-bold text-purple-400">Chat Without creating an Account</p>
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4">
@@ -97,19 +97,19 @@ export default function Homepage() {
 
       {/* Why Lilly Section */}
       <section className="max-w-6xl mx-auto px-6 py-20 relative z-10 h-full">
-        <h3 className="text-3xl font-bold text-center mb-12">Why Lilly?</h3>
+        <h3 className="text-3xl font-bold text-center mb-12 text-purple-400">Why Lilly?</h3>
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature, idx) => {
             const Icon = feature.icon;
             return (
               <Card
                 key={idx}
-                className="text-center p-8 rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-transform bg-white/60 backdrop-blur-md"
+                className="text-center p-8 rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-transform bg-gradient-to-b from-purple-900 to-purple-600 backdrop-blur-md hover:cursor-pointer"
               >
                 <CardHeader>
-                  <Icon className="w-10 h-10 mx-auto mb-4 text-pink-600" />
-                  <CardTitle className="text-xl font-semibold">{feature.title}</CardTitle>
-                  <CardDescription className="text-gray-600">{feature.description}</CardDescription>
+                  <Icon className="w-10 h-10 mx-auto mb-4 text-pink-500" />
+                  <CardTitle className="text-xl font-semibold text-amber-100">{feature.title}</CardTitle>
+                  <CardDescription className="text-600 text-pink-100">{feature.description}</CardDescription>
                 </CardHeader>
               </Card>
             );

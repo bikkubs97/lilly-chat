@@ -74,7 +74,7 @@ export default function ChatPage() {
     }
 
     return (
-        <div className="flex flex-col min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-white ">
+        <div className="flex flex-col min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-950 text-gray-200">
             {/* Header */}
             <Header />
 
@@ -83,14 +83,14 @@ export default function ChatPage() {
                 {messages.map((msg, index) => (
                     <div
                         key={index}
-                        className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"
-                            }`}
+                        className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                     >
                         <div
-                            className={`max-w-[75%] px-4 py-2 rounded-2xl shadow-sm text-sm ${msg.role === "user"
-                                    ? "bg-purple-500 text-white rounded-br-none"
-                                    : "bg-pink-500 text-gray-800 rounded-bl-none"
-                                }`}
+                            className={`max-w-[75%] px-4 py-2 rounded-2xl shadow-sm text-sm ${
+                                msg.role === "user"
+                                    ? "bg-purple-700 text-white rounded-br-none"
+                                    : "bg-gray-700 text-gray-200 rounded-bl-none"
+                            }`}
                         >
                             {msg.content}
                         </div>
@@ -99,12 +99,12 @@ export default function ChatPage() {
 
                 {/* Thinking Animation */}
                 {isThinking && (
-                    <div className="flex items-center space-x-2 text-gray-500">
-                        <div className="px-4 py-2 bg-gray-100 rounded-2xl shadow-sm rounded-bl-none flex items-center">
+                    <div className="flex items-center space-x-2 text-gray-400">
+                        <div className="px-4 py-2 bg-gray-800 rounded-2xl shadow-sm rounded-bl-none flex items-center">
                             <span className="flex space-x-1">
-                                <span className="w-2 h-2 bg-pink-400 rounded-full animate-bounce" />
-                                <span className="w-2 h-2 bg-pink-400 rounded-full animate-bounce delay-150" />
-                                <span className="w-2 h-2 bg-pink-400 rounded-full animate-bounce delay-300" />
+                                <span className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" />
+                                <span className="w-2 h-2 bg-purple-500 rounded-full animate-bounce delay-150" />
+                                <span className="w-2 h-2 bg-purple-500 rounded-full animate-bounce delay-300" />
                             </span>
                         </div>
                         <span className="text-xs">Lilly is thinking…</span>
@@ -114,7 +114,7 @@ export default function ChatPage() {
             </div>
 
             {/* Input */}
-            <div className="border-t bg-white/80 backdrop-blur-md px-2 md:px-28 py-3 flex items-center gap-2 sticky bottom-0">
+            <div className="border-t border-gray-700 bg-gray-900/80 backdrop-blur-md px-2 md:px-28 py-3 flex items-center gap-2 sticky bottom-0">
                 <textarea
                     ref={inputRef}
                     value={input}
@@ -123,12 +123,12 @@ export default function ChatPage() {
                     }
                     onKeyDown={handleKeyPress}
                     placeholder="Type your message..."
-                    className="flex-1 resize-none border rounded-xl px-4 pt-2 focus:outline-none focus:ring-2 focus:ring-pink-400 min-h-[44px]"
+                    className="flex-1 resize-none border border-gray-700 rounded-xl px-4 pt-2 bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 min-h-[44px]"
                 />
                 <Button
                     onClick={handleSendMessage}
                     disabled={!input.trim() || isThinking}
-                    className="rounded-full bg-pink-500 hover:bg-pink-600 shadow-md"
+                    className="rounded-full bg-purple-600 hover:bg-purple-700 shadow-md"
                 >
                     <Send size={24} />
                 </Button>

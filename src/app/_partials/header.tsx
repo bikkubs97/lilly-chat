@@ -36,14 +36,17 @@ export default function Header() {
     }
 
     return (
-        <header className="sticky top-0 z-20 bg-white/70 backdrop-blur-lg border-b shadow-sm">
+        <header className="sticky top-0 z-20 bg-black-500/70 backdrop-blur-lg shadow-sm">
             <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
                 {/* Logo */}
-                <div className="flex items-center gap-2">
-                    <HeartHandshake className="w-6 h-6 text-pink-500" />
-                    <h1 className="text-xl font-bold tracking-tight">Lilly.live</h1>
-                </div>
+                <Link href={'/'}>
+                    <div className="flex items-center gap-2">
 
+                        <HeartHandshake className="w-6 h-6 text-pink-500" />
+                        <h1 className="text-xl font-bold tracking-tight text-zinc-100">Lilly.live</h1>
+
+                    </div>
+                </Link>
                 {/* Desktop Nav */}
                 <nav className="hidden md:flex items-center gap-6">
 
@@ -51,7 +54,7 @@ export default function Header() {
                     {nickname ? (
                         <>
 
-                            <div className="flex text-gray-800 font-medium">
+                            <div className="flex text-white font-medium">
                                 <UserIcon />
                                 <p className="ml-2">{nickname}</p>
                             </div>
@@ -69,7 +72,7 @@ export default function Header() {
                         </Link>
                     )}
 
-                  
+
                 </nav>
 
                 {/* Mobile Menu Button */}
@@ -101,14 +104,14 @@ export default function Header() {
                             </button>
                         </>
                     ) : (
-                           <button
-                                onClick={() => {
-                                    router.push('login')
-                                }}
-                                className="w-full px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
-                            >
-                                Login
-                            </button>
+                        <button
+                            onClick={() => {
+                                router.push('login')
+                            }}
+                            className="w-full px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
+                        >
+                            Login
+                        </button>
                     )}
                 </div>
             )}

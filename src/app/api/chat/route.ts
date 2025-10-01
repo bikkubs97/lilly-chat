@@ -1,9 +1,39 @@
-// app/api/chat/route.ts - Explicit version
+// app/api/chat/route.ts
 import { NextRequest, NextResponse } from "next/server";
 
 interface Message {
   role: "assistant" | "user";
   content: string;
+}
+
+interface AssistantMessageContent {
+  type: "text";
+  text: {
+    value: string;
+  };
+}
+
+interface AssistantMessage {
+  role: "assistant" | "user";
+  content: AssistantMessageContent[];
+  created_at: number;
+}
+
+interface ThreadResponse {
+  id: string;
+}
+
+interface RunResponse {
+  id: string;
+  status: string;
+}
+
+interface StatusResponse {
+  status: string;
+}
+
+interface MessagesResponse {
+  data: AssistantMessage[];
 }
 
 const ASSISTANT_ID = process.env.OPENAI_ASSISTANT_ID || "";
@@ -29,66 +59,45 @@ export async function POST(req: NextRequest) {
 
     const baseURL = "https://api.openai.com/v1";
     const headers = {
-      "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       "Content-Type": "application/json",
-      "OpenAI-Beta": "assistants=v2"
+      "OpenAI-Beta": "assistants=v2",
     };
 
     if (ASSISTANT_ID) {
       try {
-        console.log("Using Assistant ID:", ASSISTANT_ID);
-
         // 1. Create thread
-        console.log("Creating thread...");
-        const threadResponse = await fetch(`${baseURL}/threads`, {
+        const threadRes = await fetch(`${baseURL}/threads`, {
           method: "POST",
           headers,
-          body: JSON.stringify({})
+          body: JSON.stringify({}),
         });
-
-        if (!threadResponse.ok) {
-          throw new Error(`Thread creation failed: ${threadResponse.status} ${threadResponse.statusText}`);
-        }
-
-        const thread = await threadResponse.json();
-        console.log("Thread created:", thread.id);
+        if (!threadRes.ok) throw new Error(`Thread creation failed: ${threadRes.status}`);
+        const thread: ThreadResponse = await threadRes.json();
 
         // 2. Add messages to thread
         for (const message of messages) {
           if (message.role === "user") {
-            console.log("Adding message to thread...");
-            const messageResponse = await fetch(`${baseURL}/threads/${thread.id}/messages`, {
+            const msgRes = await fetch(`${baseURL}/threads/${thread.id}/messages`, {
               method: "POST",
               headers,
-              body: JSON.stringify({
-                role: "user",
-                content: message.content
-              })
+              body: JSON.stringify({ role: "user", content: message.content }),
             });
-
-            if (!messageResponse.ok) {
-              throw new Error(`Message creation failed: ${messageResponse.status}`);
-            }
+            if (!msgRes.ok) throw new Error(`Message creation failed: ${msgRes.status}`);
           }
         }
 
         // 3. Create run
-        console.log("Creating run...");
-        const runResponse = await fetch(`${baseURL}/threads/${thread.id}/runs`, {
+        const runRes = await fetch(`${baseURL}/threads/${thread.id}/runs`, {
           method: "POST",
           headers,
-          body: JSON.stringify({
-            assistant_id: ASSISTANT_ID
-          })
+          body: JSON.stringify({ assistant_id: ASSISTANT_ID }),
         });
-
-        if (!runResponse.ok) {
-          const errorText = await runResponse.text();
-          throw new Error(`Run creation failed: ${runResponse.status} ${errorText}`);
+        if (!runRes.ok) {
+          const errText = await runRes.text();
+          throw new Error(`Run creation failed: ${runRes.status} ${errText}`);
         }
-
-        const run = await runResponse.json();
-        console.log("Run created:", run.id, "Status:", run.status);
+        const run: RunResponse = await runRes.json();
 
         // 4. Poll for completion
         let runStatus = run.status;
@@ -97,79 +106,55 @@ export async function POST(req: NextRequest) {
 
         while ((runStatus === "queued" || runStatus === "in_progress") && attempts < maxAttempts) {
           await new Promise(resolve => setTimeout(resolve, 1000));
-          
-          console.log(`Checking run status... Attempt ${attempts + 1}`);
-          const statusResponse = await fetch(`${baseURL}/threads/${thread.id}/runs/${run.id}`, {
-            headers
-          });
-
-          if (!statusResponse.ok) {
-            throw new Error(`Status check failed: ${statusResponse.status}`);
-          }
-
-          const statusData = await statusResponse.json();
+          const statusRes = await fetch(`${baseURL}/threads/${thread.id}/runs/${run.id}`, { headers });
+          if (!statusRes.ok) throw new Error(`Status check failed: ${statusRes.status}`);
+          const statusData: StatusResponse = await statusRes.json();
           runStatus = statusData.status;
-          console.log("Current status:", runStatus);
           attempts++;
         }
 
         if (runStatus === "completed") {
-          // 5. Get messages
-          console.log("Getting messages...");
-          const messagesResponse = await fetch(`${baseURL}/threads/${thread.id}/messages`, {
-            headers
-          });
+          const messagesRes = await fetch(`${baseURL}/threads/${thread.id}/messages`, { headers });
+          if (!messagesRes.ok) throw new Error(`Messages retrieval failed: ${messagesRes.status}`);
+          const messagesData: MessagesResponse = await messagesRes.json();
 
-          if (!messagesResponse.ok) {
-            throw new Error(`Messages retrieval failed: ${messagesResponse.status}`);
-          }
-
-          const messagesData = await messagesResponse.json();
           const assistantMessage = messagesData.data
-            .filter((msg: any) => msg.role === "assistant")
-            .sort((a: any, b: any) => b.created_at - a.created_at)[0];
+            .filter(msg => msg.role === "assistant")
+            .sort((a, b) => b.created_at - a.created_at)[0];
 
-          if (assistantMessage && assistantMessage.content[0]?.type === "text") {
+          if (assistantMessage?.content[0]?.type === "text") {
             const reply = assistantMessage.content[0].text.value;
             return NextResponse.json({ reply });
           }
-        } else {
-          console.log("Run did not complete successfully. Status:", runStatus);
-          throw new Error(`Run failed with status: ${runStatus}`);
         }
-
       } catch (assistantError) {
         console.error("Assistant API error:", assistantError);
-        // Fall through to chat completions
+        // fallback to Chat Completions
       }
     }
 
-    // Fallback to Chat Completions API
-    console.log("Using Chat Completions API...");
-    const completion = await fetch(`${baseURL}/chat/completions`, {
+    // Fallback: OpenAI Chat Completions API
+    const completionRes = await fetch(`${baseURL}/chat/completions`, {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-        "Content-Type": "application/json"
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         model: "gpt-4",
-        messages: messages.map(msg => ({
-          role: msg.role,
-          content: msg.content,
-        })),
+        messages: messages.map(msg => ({ role: msg.role, content: msg.content })),
         max_tokens: 1000,
         temperature: 0.7,
-      })
+      }),
     });
 
-    if (!completion.ok) {
-      throw new Error(`Chat completion failed: ${completion.status}`);
-    }
+    if (!completionRes.ok) throw new Error(`Chat completion failed: ${completionRes.status}`);
 
-    const completionData = await completion.json();
-    const reply = completionData.choices[0]?.message?.content || "Sorry, I couldn't get a response.";
-    
+    const completionData: {
+      choices: { message: { content: string } }[];
+    } = await completionRes.json();
+
+    const reply = completionData.choices?.[0]?.message?.content || "Sorry, I couldn't get a response.";
     return NextResponse.json({ reply });
 
   } catch (error) {

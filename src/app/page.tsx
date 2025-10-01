@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { HeartHandshake, MessageCircle, Heart, Shield, Zap } from "lucide-react";
 import { FlipWords } from "@/components/ui/shadcn-io/flip-words";
 import { GradientText } from "@/components/ui/shadcn-io/gradient-text";
@@ -33,7 +33,7 @@ export default function Homepage() {
   return (
     <main className=" text-gray-900 relative overflow-hidden">
       {/* Aurora Background */}
-      <AuroraBackground className="absolute inset-0 " />
+      <AuroraBackground className="absolute inset-0 " >{""}</AuroraBackground>
 
       <Header />
 

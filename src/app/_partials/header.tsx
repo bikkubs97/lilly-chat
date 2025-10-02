@@ -36,7 +36,7 @@ export default function Header() {
     }
 
     return (
-        <header className="sticky top-0 z-20 bg-black-500/70 backdrop-blur-lg shadow-sm">
+        <header className="sticky top-0 z-20 bg-purple-500/70 backdrop-blur-lg shadow-sm">
             <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
                 {/* Logo */}
                 <Link href={'/'}>
@@ -60,16 +60,18 @@ export default function Header() {
                             </div>
                             <button
                                 onClick={handleLogout}
-                                className="rounded-full text-white px-5 py-2 bg-gradient-to-r from-pink-500 to-purple-500 hover:scale-105 transition-transform shadow-md"
+                                className="rounded-full text-white px-5 py-2 bg-pink-500 hover:scale-105 transition-transform shadow-md"
                             >
                                 Logout
                             </button>
 
                         </>
                     ) : (
-                        <Link href="/login" className="hover:text-pink-600 transition-colors">
+                        <button className="rounded-full text-white px-5 py-2 bg-pink-500 hover:scale-105 transition-transform shadow-md" >
+                        <Link href="/login">
                             Login
                         </Link>
+                        </button>
                     )}
 
 
@@ -77,44 +79,51 @@ export default function Header() {
 
                 {/* Mobile Menu Button */}
                 <div className="md:hidden">
-                    <button onClick={toggleMenu}>
+                    <button className="text-white" onClick={toggleMenu}>
                         {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                     </button>
                 </div>
             </div>
+{menuOpen && (
+    <div className="md:hidden px-6 py-4 bg-white/95 backdrop-blur-md border-t shadow-sm space-y-4">
+        
+        {/* Chat */}
+        <button
+            onClick={toggleMenu}
+            className="w-full rounded-full text-white px-5 py-2 bg-pink-500 hover:scale-105 transition-transform shadow-md"
+        >
+            Chat
+        </button>
 
-            {/* Mobile Menu */}
-            {menuOpen && (
-                <div className="md:hidden px-6 py-4 bg-white/95 backdrop-blur-md border-t shadow-sm space-y-4">
-                    <Link href="/chat" onClick={toggleMenu} className="block">
-                        Chat
-                    </Link>
+        {nickname ? (
+            <>
+                <span className="block text-gray-800 font-medium text-center">Hi {nickname}</span>
+                <button
+                    onClick={() => {
+                        handleLogout();
+                        toggleMenu();
+                    }}
+                    className="w-full rounded-full px-5 py-2 bg-red-500 text-white hover:bg-red-600 transition shadow-md"
+                >
+                    Logout
+                </button>
+            </>
+        ) : (
+            <button
+                onClick={() => {
+                    router.push('/login');
+                    toggleMenu();
+                }}
+                className="w-full rounded-full text-white px-5 py-2 bg-pink-500 hover:scale-105 transition-transform shadow-md"
+            >
+                Login
+            </button>
+        )}
+    </div>
+)}
 
-                    {nickname ? (
-                        <>
-                            <span className="block text-gray-800 font-medium">Hi {nickname}</span>
-                            <button
-                                onClick={() => {
-                                    handleLogout();
-                                    toggleMenu();
-                                }}
-                                className="w-full px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
-                            >
-                                Logout
-                            </button>
-                        </>
-                    ) : (
-                        <button
-                            onClick={() => {
-                                router.push('login')
-                            }}
-                            className="w-full px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
-                        >
-                            Login
-                        </button>
-                    )}
-                </div>
-            )}
+                
+            
         </header>
     );
 }

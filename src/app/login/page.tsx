@@ -61,15 +61,15 @@ function LoginPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-pink-100 via-white to-blue-100 text-gray-900">
+    <div className="flex flex-col min-h-screen bg-gray-900 text-gray-200">
       <Header />
 
       <main className="flex-1 flex items-center justify-center px-4 py-12">
         <form
           onSubmit={handleLogin}
-          className="w-full max-w-md space-y-6 bg-white border border-pink-200 p-8 rounded-2xl shadow-xl"
+          className="w-full max-w-md space-y-6 bg-gray-800 border border-gray-700 p-8 rounded-2xl shadow-xl"
         >
-          <h1 className="text-3xl font-bold text-center bg-gradient-to-r from-pink-500 to-blue-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold text-center text-white">
             Login to Lilly
           </h1>
 
@@ -77,13 +77,13 @@ function LoginPage() {
             <p className="text-red-500 text-sm text-center font-medium">{error}</p>
           )}
           {success && (
-            <p className="text-green-600 text-sm text-center font-medium">{success}</p>
+            <p className="text-green-500 text-sm text-center font-medium">{success}</p>
           )}
 
           <input
             type="email"
             placeholder="Email"
-            className="w-full p-3 border border-pink-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full p-3 border border-gray-600 rounded-md text-sm bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -92,21 +92,21 @@ function LoginPage() {
           <input
             type="password"
             placeholder="Password"
-            className="w-full p-3 border border-pink-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full p-3 border border-gray-600 rounded-md text-sm bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
 
-          <Button className="w-full bg-gradient-to-r from-pink-500 to-blue-600 hover:from-pink-600 hover:to-blue-700 text-white py-2 text-lg rounded-md transition shadow-md">
+          <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 text-lg rounded-md transition shadow-md">
             Login
           </Button>
 
-          <p className="text-center text-sm text-gray-600">
+          <p className="text-center text-sm text-gray-400">
             Don’t have an account?{" "}
             <a
               href="/signup"
-              className="font-medium text-pink-600 hover:text-blue-600 transition"
+              className="font-medium text-white hover:text-pink-500 transition"
             >
               Sign up
             </a>

@@ -77,7 +77,7 @@ export default function Homepage() {
           <Link href="/chat" className="flex items-center gap-2 ">
             <Button
               size="lg"
-              className="rounded-full shadow-lg px-10 py-6 text-lg bg-gradient-to-r from-pink-600 to-purple-600 hover:scale-105 transition-transform hover:cursor-pointer"
+              className="rounded-full shadow-lg px-10 py-6 text-lg  bg-purple-500 hover:bg-pink-00 hover:scale-105  transition-transform hover:cursor-pointer"
             >
               <MessageCircle />
               Chat Now
@@ -86,7 +86,7 @@ export default function Homepage() {
           <Link href={'/signup'}>
             <Button
               size="lg"
-              className="rounded-full shadow-lg px-10 py-6 text-lg bg-gradient-to-r from-pink-600 to-purple-600 hover:scale-105 transition-transform hover:cursor-pointer"
+              className="rounded-full shadow-lg px-10 py-6 text-lg bg-purple-500 hover:bg-purple-500 hover:scale-105 transition-transform hover:cursor-pointer"
             >
 
               Sign Up

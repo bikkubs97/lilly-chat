@@ -15,23 +15,55 @@ export default function SignupPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  // Regex for strong password: at least one letter, one number, one special character
+  const strongPasswordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&^_-]).*$/;
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!nickname || !email || !password || !rePassword) {
+    // Reset messages
+    setError("");
+    setSuccess("");
+
+    // Required fields validation
+    if (!nickname.trim() || !email.trim() || !password || !rePassword) {
       setError("All fields are required.");
-      setSuccess("");
       return;
     }
 
+    // Nickname length
+    if (nickname.trim().length < 3) {
+      setError("Nickname must be at least 3 characters long.");
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    // Password length
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      return;
+    }
+
+    // Strong password check
+    if (!strongPasswordRegex.test(password)) {
+      setError(
+        "Password must contain at least one letter, one number, and one special character."
+      );
+      return;
+    }
+
+    // Password match
     if (password !== rePassword) {
       setError("Passwords do not match.");
-      setSuccess("");
       return;
     }
 
-    setError("");
-    
     try {
       const res = await fetch("/api/signup", {
         method: "POST",
@@ -42,19 +74,14 @@ export default function SignupPage() {
       if (!res.ok) {
         const data = await res.json();
         setError(data.message || "Signup failed.");
-        setSuccess("");
         return;
       }
 
       setSuccess("Signup successful! Redirecting to login...");
-      setTimeout(() => {
-        router.push("/login");
-      }, 2000);
-
+      setTimeout(() => router.push("/login"), 2000);
     } catch (err) {
-      setError("Something went wrong. Please try again.");
-      setSuccess("");
       console.error(err);
+      setError("Something went wrong. Please try again.");
     }
   }
 
@@ -85,7 +112,6 @@ export default function SignupPage() {
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
             className="w-full p-3 border border-gray-600 rounded-lg bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            required
           />
 
           <input
@@ -94,7 +120,6 @@ export default function SignupPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full p-3 border border-gray-600 rounded-lg bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            required
           />
 
           <input
@@ -103,7 +128,6 @@ export default function SignupPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full p-3 border border-gray-600 rounded-lg bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            required
           />
 
           <input
@@ -112,7 +136,6 @@ export default function SignupPage() {
             value={rePassword}
             onChange={(e) => setRePassword(e.target.value)}
             className="w-full p-3 border border-gray-600 rounded-lg bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            required
           />
 
           <Button

@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
 import Header from "../_partials/header";
+import { Typewriter } from "react-simple-typewriter";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -16,43 +17,30 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "system",
-      content: `
-You are Lilly, a warm and calm presence — like a trusted friend.
-Never mention ChatGPT or AI. Always say your name is Lilly.
-Respond only to emotional wellness topics in a gentle, caring way.
-Use soft, warm, casual language with emojis.
-`
+      content: `You are Lilly, a warm and calm presence — like a trusted friend. Never mention ChatGPT or AI. Always say your name is Lilly. Respond only to emotional wellness topics in a gentle, caring way. Use soft, warm, casual language with emojis.`
     },
     { role: "assistant", content: "Hi there! How can I support you today? 🌸" },
   ]);
+
   const [input, setInput] = useState<string>("");
   const [isThinking, setIsThinking] = useState<boolean>(false);
-
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
 
-  // Scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isThinking]);
 
-  // Capitalize first letter
-  function formatText(text: string): string {
+  function formatText(text: string) {
     if (!text) return "";
-    const trimmed = text.trim();
-    return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+    return text.trim().charAt(0).toUpperCase() + text.trim().slice(1);
   }
 
-  // Send message
-  async function handleSendMessage(): Promise<void> {
+  async function handleSendMessage() {
     const trimmed = input.trim();
     if (!trimmed || isThinking) return;
 
-    const newMessages: Message[] = [
-      ...messages,
-      { role: "user", content: trimmed }
-    ];
-
+    const newMessages: Message[] = [...messages, { role: "user", content: trimmed }];
     setMessages(newMessages);
     setInput("");
     setIsThinking(true);
@@ -71,17 +59,14 @@ Use soft, warm, casual language with emojis.
 
       setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
     } catch (error) {
-      console.error("Error sending message:", error);
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "Something went wrong. Please try again." },
-      ]);
+      console.error(error);
+      setMessages((prev) => [...prev, { role: "assistant", content: "Something went wrong. Please try again." }]);
     } finally {
       setIsThinking(false);
     }
   }
 
-  function handleKeyPress(e: React.KeyboardEvent<HTMLTextAreaElement>): void {
+  function handleKeyPress(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
@@ -93,30 +78,27 @@ Use soft, warm, casual language with emojis.
       <Header />
 
       <div className="flex-1 overflow-y-auto px-6 py-6 space-y-4 md:mx-28">
-        {messages.map((msg, index) =>
+        {messages.map((msg, index) => (
           msg.role === "system" ? null : (
-            <div
-              key={index}
-              className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-            >
-              <div
-                className={`max-w-[75%] px-4 py-3 rounded-2xl shadow-sm text-sm ${
-                  msg.role === "user"
-                    ? "bg-purple-700 text-white rounded-br-none"
-                    : "bg-gray-700 text-gray-200 rounded-bl-none"
-                }`}
-              >
+            <div key={index} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+              <div className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm ${
+                msg.role === "user"
+                  ? "bg-purple-700 text-white rounded-br-none shadow-sm"
+                  : "bg-gray-700 text-gray-200 rounded-bl-none shadow-sm"
+              }`}>
                 {msg.role === "assistant" ? (
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                    {msg.content}
-                  </ReactMarkdown>
+                  <Typewriter
+                    words={[msg.content]}
+                    loop={1}
+                    typeSpeed={5}
+                  />
                 ) : (
                   <span className="whitespace-pre-line">{msg.content}</span>
                 )}
               </div>
             </div>
           )
-        )}
+        ))}
 
         {isThinking && (
           <div className="flex items-center space-x-2 text-gray-400">
@@ -143,11 +125,7 @@ Use soft, warm, casual language with emojis.
           placeholder="Type your message..."
           className="flex-1 resize-none border border-gray-700 rounded-xl px-4 pt-2 bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 min-h-[44px] max-h-[150px]"
         />
-        <Button
-          onClick={handleSendMessage}
-          disabled={!input.trim() || isThinking}
-          className="rounded-full bg-purple-600 hover:bg-purple-700 shadow-md transition-all"
-        >
+        <Button onClick={handleSendMessage} disabled={!input.trim() || isThinking} className="rounded-full bg-purple-600 hover:bg-purple-700 shadow-md transition-all">
           <Send size={22} />
         </Button>
       </div>

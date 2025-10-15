@@ -10,8 +10,8 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Lilly.live",
-  description: "Your AI Metal health companion, free, anonymous, private and safe!",
+  title: "Lilly Your AI Mental Health Companion",
+  description: "AI mental health chatbot - free, private, safe, secure and anonymous!",
 };
 
 export default function RootLayout({

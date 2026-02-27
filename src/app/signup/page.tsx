@@ -94,7 +94,7 @@ export default function SignupPage() {
           onSubmit={handleSubmit}
           className="w-full max-w-md bg-gray-800 border border-gray-700 rounded-2xl shadow-xl p-8 space-y-6"
         >
-          <h1 className="text-3xl font-bold text-center text-purple-400">
+          <h1 className="text-3xl font-bold text-center text-pink-500">
             Sign Up to Lilly
           </h1>
 
@@ -140,7 +140,7 @@ export default function SignupPage() {
 
           <Button
             type="submit"
-            className="w-full bg-purple-600 hover:bg-purple-700 transition-transform rounded-full py-3 text-white text-lg shadow-lg"
+            className="w-full bg-pink-500 hover:bg-purple-700 transition-transform rounded-full py-3 text-white text-lg shadow-lg hover:cursor-pointer"
           >
             Sign Up
           </Button>

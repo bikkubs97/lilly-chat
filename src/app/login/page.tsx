@@ -98,7 +98,7 @@ function LoginPage() {
             required
           />
 
-          <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 text-lg rounded-md transition shadow-md">
+          <Button className="w-full bg-pink-500 hover:bg-purple-700 text-white py-2 text-lg rounded-md transition shadow-md hover:cursor-pointer">
             Login
           </Button>
 

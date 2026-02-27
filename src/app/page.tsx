@@ -77,7 +77,7 @@ export default function Homepage() {
           <Link href="/chat" className="flex items-center gap-2 ">
             <Button
               size="lg"
-              className="rounded-full shadow-lg px-10 py-6 text-lg  bg-purple-500 hover:bg-pink-00 hover:scale-105  transition-transform hover:cursor-pointer"
+              className="rounded-full shadow-lg px-10 py-6 text-lg  bg-pink-500 hover:bg-purple-500 hover:scale-105  transition-transform hover:cursor-pointer"
             >
               <MessageCircle />
               Chat Now
@@ -86,7 +86,7 @@ export default function Homepage() {
           <Link href={'/signup'}>
             <Button
               size="lg"
-              className="rounded-full shadow-lg px-10 py-6 text-lg bg-purple-500 hover:bg-purple-500 hover:scale-105 transition-transform hover:cursor-pointer"
+              className="rounded-full shadow-lg px-10 py-6 text-lg bg-pink-500 hover:bg-purple-500 hover:scale-105 transition-transform hover:cursor-pointer"
             >
 
               Sign Up
@@ -104,7 +104,7 @@ export default function Homepage() {
             return (
               <Card
                 key={idx}
-                className="text-center p-8 rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-transform bg-gradient-to-b from-purple-900 to-purple-600 backdrop-blur-md hover:cursor-pointer"
+                className="border-none text-center p-8 rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-transform bg-gradient-to-b from-purple-900 to-black backdrop-blur-md hover:cursor-pointer"
               >
                 <CardHeader>
                   <Icon className="w-10 h-10 mx-auto mb-4 text-pink-500" />

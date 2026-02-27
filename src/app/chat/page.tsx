@@ -173,7 +173,7 @@ export default function ChatPage() {
         <Button
           onClick={handleSendMessage}
           disabled={!input.trim() || isThinking}
-          className="rounded-full bg-purple-600 hover:bg-purple-700 shadow-md transition-all"
+          className="rounded-full bg-pink-500 hover:bg-purple-700 shadow-md transition-all"
         >
           <Send size={22} />
         </Button>

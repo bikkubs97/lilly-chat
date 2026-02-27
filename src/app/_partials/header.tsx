@@ -36,7 +36,7 @@ export default function Header() {
     }
 
     return (
-        <header className="sticky top-0 z-20 bg-purple-500/70 backdrop-blur-lg shadow-sm">
+        <header className="sticky top-0 z-20 bg-gradient-to-b from-black to-none  backdrop-blur-lg shadow-sm">
             <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
                 {/* Logo */}
                 <Link href={'/'}>

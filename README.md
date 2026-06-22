@@ -16,7 +16,7 @@ A full-stack web application providing empathetic AI chat support, private journ
 - **Private Journaling**: Capture thoughts, track personal growth, and reflect safely
 - **Mood Tracking**: Log your emotional state after each chat and visualize patterns with an interactive calendar
 - **User Authentication**: Secure JWT-based login and signup with nickname personalization
-- **Privacy-First**: All conversations and journal entries are private and encrypted
+- **Privacy-First**: All conversations and journal entries are stored privately per user
 
 ## 🛠️ Tech Stack
 
@@ -51,7 +51,7 @@ A full-stack web application providing empathetic AI chat support, private journ
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/lilly-chat.git
+git clone https://github.com/bikkubs97/lilly-chat.git
 cd lilly-chat
 ```
 
@@ -63,7 +63,7 @@ npm install
 
 ### 3. Environment Setup
 
-Create a `.env` file in the root directory:
+Create a `.env.local` file in the root directory:
 
 ```bash
 # Database
@@ -120,7 +120,9 @@ src/
 │   ├── auth.ts                 # JWT authentication helpers
 │   └── utils.ts                # Utility functions
 └── models/
-    └── user.ts                 # User Mongoose schema
+    ├── user.ts                 # User Mongoose schema
+    ├── journal.ts              # Journal entry schema
+    └── mood.ts                 # Mood log schema
 ```
 
 ## 🔑 Key API Endpoints
@@ -162,16 +164,6 @@ The moodboard analyzes chat messages using OpenAI's API to detect emotional tone
 
 Moods are visualized on an interactive calendar with color-coded badges.
 
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
 ## ⚖️ Disclaimer
 
 **Lilly is not a substitute for professional mental health care.** If you are experiencing a crisis or have suicidal thoughts, please contact:
@@ -188,16 +180,8 @@ This project is licensed under the MIT License — see the LICENSE file for deta
 
 **Bikku BS**
 
-- GitHub: [@yourgithubprofile](https://github.com/yourgithubprofile)
+- GitHub: [@bikkubs97](https://github.com/bikkubs97)
 - Email: bikku4444@gmail.com
-
-## 🙏 Acknowledgments
-
-- OpenAI for the chat API
-- Next.js and React communities
-- Tailwind CSS for utility-first styling
-- MongoDB for the database
-- shadcn/ui for component inspiration
 
 ---
 

@@ -3,6 +3,7 @@ import { Schema, models, model } from "mongoose";
 const journalSchema = new Schema({
   title: { type: String, required: true },
   content: { type: String, required: true },
+  embedding: { type: [Number], select: false },
   createdAt: { type: Date, default: Date.now },
 });
 

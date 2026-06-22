@@ -24,6 +24,7 @@ export default function ChatPage() {
 
   const [input, setInput] = useState<string>("");
   const [isThinking, setIsThinking] = useState<boolean>(false);
+  const [contextStatus, setContextStatus] = useState<string>("");
 
   const [typingIndex, setTypingIndex] = useState<number | null>(null);
   const [typingLines, setTypingLines] = useState<string[]>([]);
@@ -49,20 +50,28 @@ export default function ChatPage() {
     const newMessages: Message[] = [...messages, { role: "user", content: trimmed }];
     setMessages(newMessages);
     setInput("");
+    setContextStatus("");
     inputRef.current?.focus();
     setIsThinking(true);
 
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${window.localStorage.getItem("token") || ""}`,
+        },
         body: JSON.stringify({ messages: newMessages }),
       });
 
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-      const data: { reply?: string } = await response.json();
+      const data: { reply?: string; usedJournalContext?: boolean; usedMoodContext?: boolean } = await response.json();
       const reply = formatText(data.reply || "Sorry, I couldn't get a response.");
+      if (data.usedJournalContext || data.usedMoodContext) {
+        const sources = [data.usedJournalContext && "journal", data.usedMoodContext && "recent moods"].filter(Boolean).join(" and ");
+        setContextStatus(`Using your ${sources} as private context`);
+      }
 
       // Add assistant placeholder
       setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
@@ -152,6 +161,11 @@ export default function ChatPage() {
                   Chat with Lilly
                 </span>
                 <span className="text-sm text-slate-400">Track your mood after each session.</span>
+                {contextStatus && (
+                  <span className="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1 text-xs text-emerald-200">
+                    {contextStatus}
+                  </span>
+                )}
               </div>
             </div>
 

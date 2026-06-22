@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/user";
 import { getTokenFromRequest, verifyToken } from "@/lib/auth";
+import { getEmbedding } from "@/lib/embeddings";
 
 export async function GET(req: NextRequest) {
   try {
@@ -41,16 +42,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
+    const embedding = await getEmbedding(`${title}\n\n${content}`);
     const journalEntry = {
       title,
       content,
+      embedding,
       createdAt: new Date(),
     };
 
     user.journals = [...(user.journals || []), journalEntry];
     await user.save();
 
-    return NextResponse.json({ journalEntry });
+    const savedEntry = user.journals[user.journals.length - 1].toObject();
+    const { embedding: _embedding, ...journalEntryResponse } = savedEntry;
+    return NextResponse.json({ journalEntry: journalEntryResponse });
   } catch (error) {
     console.error("Journal POST error:", error);
     return NextResponse.json({ error: "Unable to save journal entry" }, { status: 500 });

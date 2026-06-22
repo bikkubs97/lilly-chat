@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Heart, Zap } from "lucide-react";
 import { FlipWords } from "@/components/ui/shadcn-io/flip-words";
@@ -11,6 +11,12 @@ import Link from "next/link";
 import LillyNeuralNetwork from "@/components/illustrations/lilly-neural-network";
 
 export default function Homepage() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(Boolean(window.localStorage.getItem("token")));
+  }, []);
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-950 via-violet-950 to-slate-950 text-white">
       <Header />
@@ -56,7 +62,7 @@ export default function Homepage() {
         </p>
 
         <p className="text-lg text-slate-300 max-w-2xl mx-auto">
-          Chat with empathy, journal your thoughts, and track your emotional journey—all in one safe space.
+          Chat with empathy, journal your thoughts, and track your emotional journey—all in one safe space. You don't have to create an account to start chatting.
         </p>
 
         {/* CTA Buttons */}
@@ -70,14 +76,16 @@ export default function Homepage() {
               Chat Now
             </Button>
           </Link>
-          <Link href="/signup">
-            <Button
-              size="lg"
-              className="rounded-full shadow-2xl shadow-purple-500/25 px-10 py-6 text-lg bg-purple-600 hover:bg-purple-500 transition-transform hover:scale-105 hover:cursor-pointer"
-            >
-              Sign Up
-            </Button>
-          </Link>
+          {!isLoggedIn && (
+            <Link href="/signup">
+              <Button
+                size="lg"
+                className="rounded-full shadow-2xl shadow-purple-500/25 px-10 py-6 text-lg bg-purple-600 hover:bg-purple-500 transition-transform hover:scale-105 hover:cursor-pointer"
+              >
+                Sign Up
+              </Button>
+            </Link>
+          )}
         </div>
       </section>
 

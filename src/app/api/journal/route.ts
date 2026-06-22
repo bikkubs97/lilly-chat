@@ -54,8 +54,8 @@ export async function POST(req: NextRequest) {
     await user.save();
 
     const savedEntry = user.journals[user.journals.length - 1].toObject();
-    const { embedding: _embedding, ...journalEntryResponse } = savedEntry;
-    return NextResponse.json({ journalEntry: journalEntryResponse });
+    delete savedEntry.embedding;
+    return NextResponse.json({ journalEntry: savedEntry });
   } catch (error) {
     console.error("Journal POST error:", error);
     return NextResponse.json({ error: "Unable to save journal entry" }, { status: 500 });

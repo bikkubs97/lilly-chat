@@ -315,7 +315,7 @@ export default function Homepage() {
               <h4 className="text-xl font-semibold text-white mb-3">Private Journals</h4>
               <p className="text-sm text-slate-300 leading-relaxed">
                 Capture your thoughts, track moments of growth, and revisit your feelings over time.
-                Lilly's journal keeps your entries secure while helping you notice patterns and progress.
+                Lilly&apos;s journal keeps your entries secure while helping you notice patterns and progress.
               </p>
             </div>
 

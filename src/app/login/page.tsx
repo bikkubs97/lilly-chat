@@ -61,13 +61,13 @@ function LoginPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-900 text-gray-200">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-950 via-violet-950 to-slate-950 text-white">
       <Header />
 
       <main className="flex-1 flex items-center justify-center px-4 py-12">
         <form
           onSubmit={handleLogin}
-          className="w-full max-w-md space-y-6 bg-gray-800 border border-gray-700 p-8 rounded-2xl shadow-xl"
+          className="w-full max-w-md space-y-6 bg-slate-950/95 border border-purple-700 p-8 rounded-3xl shadow-2xl shadow-black/30"
         >
           <h1 className="text-3xl font-bold text-center text-white">
             Login to Lilly
@@ -83,7 +83,7 @@ function LoginPage() {
           <input
             type="email"
             placeholder="Email"
-            className="w-full p-3 border border-gray-600 rounded-md text-sm bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full p-3 border border-purple-700 rounded-md text-sm bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -92,13 +92,13 @@ function LoginPage() {
           <input
             type="password"
             placeholder="Password"
-            className="w-full p-3 border border-gray-600 rounded-md text-sm bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full p-3 border border-purple-700 rounded-md text-sm bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
 
-          <Button className="w-full bg-pink-500 hover:bg-purple-700 text-white py-2 text-lg rounded-md transition shadow-md hover:cursor-pointer">
+          <Button className="w-full bg-purple-600 hover:bg-pink-500 text-white py-2 text-lg rounded-full transition shadow-md hover:cursor-pointer">
             Login
           </Button>
 

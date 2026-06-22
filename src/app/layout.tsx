@@ -10,8 +10,27 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Lilly Your AI Mental Health Companion",
-  description: "AI mental health chatbot - free, private, safe, secure and anonymous!",
+  title: "Lilly | AI Mental Health Companion for Journaling & Mood Tracking",
+  description:
+    "Lilly is an AI-powered mental wellness companion offering empathetic chat support, private journaling, and mood tracking in one secure experience.",
+  keywords: [
+    "AI mental health", "emotional wellness", "mental health chatbot", "journal app", "mood tracker", "therapy companion", "self-care", "wellbeing assistant", "mental wellness tool",
+  ],
+  metadataBase: new URL("https://lilly.live"),
+  openGraph: {
+    title: "Lilly | AI Mental Health Companion",
+    description:
+      "Private AI chat support for journaling, mood tracking, and emotional wellness insights.",
+    type: "website",
+    url: "https://lilly.live",
+    siteName: "Lilly",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Lilly | AI Mental Health Companion",
+    description:
+      "Private AI chat support for journaling, mood tracking, and emotional wellness insights.",
+  },
 };
 
 export default function RootLayout({

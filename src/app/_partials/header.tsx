@@ -36,45 +36,50 @@ export default function Header() {
     }
 
     return (
-        <header className="sticky top-0 z-20 bg-gradient-to-b from-black to-none  backdrop-blur-lg shadow-sm">
-            <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <header className="fixed top-0 left-0 right-0 z-50 w-full bg-slate-950/60 backdrop-blur-3xl shadow-black/10 shadow-sm backdrop-saturate-150">
+            <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
                 {/* Logo */}
                 <Link href={'/'}>
                     <div className="flex items-center gap-2">
-
-                        <HeartHandshake className="w-6 h-6 text-pink-500" />
-                        <h1 className="text-xl font-bold tracking-tight text-zinc-100">Lilly.live</h1>
-
+                        <HeartHandshake className="w-6 h-6 text-fuchsia-400" />
+                        <h1 className="text-xl font-bold tracking-tight text-white">Lilly.live</h1>
                     </div>
                 </Link>
                 {/* Desktop Nav */}
-                <nav className="hidden md:flex items-center gap-6">
-
+                <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-200">
+                    <Link href="/" className="rounded-full px-3 py-2 transition text-slate-200 hover:bg-white/5 hover:text-white">
+                        Home
+                    </Link>
+                    <Link href="/chat" className="rounded-full px-3 py-2 transition text-slate-200 hover:bg-white/5 hover:text-white">
+                        Chat
+                    </Link>
+                    {!nickname && (
+                        <Link href="/signup" className="rounded-full px-3 py-2 transition text-slate-200 hover:bg-white/5 hover:text-white">
+                            Sign Up
+                        </Link>
+                    )}
 
                     {nickname ? (
                         <>
-
-                            <div className="flex text-white font-medium">
+                            <div className="flex items-center gap-2 text-white font-medium">
                                 <UserIcon />
-                                <p className="ml-2">{nickname}</p>
+                                <p>{nickname}</p>
                             </div>
                             <button
                                 onClick={handleLogout}
-                                className="rounded-full text-white px-5 py-2 bg-pink-500 hover:scale-105 transition-transform shadow-md"
+                                className="rounded-full text-white px-5 py-2 bg-purple-600 hover:bg-fuchsia-500 hover:scale-105 transition-transform shadow-md shadow-purple-500/20"
                             >
                                 Logout
                             </button>
-
                         </>
                     ) : (
-                        <button className="rounded-full text-white px-5 py-2 bg-pink-500 hover:scale-105 transition-transform shadow-md" >
-                        <Link href="/login">
+                        <Link
+                            href="/login"
+                            className="rounded-full bg-purple-600 px-5 py-2 text-white hover:bg-fuchsia-500 hover:scale-105 transition-transform shadow-md shadow-purple-500/20"
+                        >
                             Login
                         </Link>
-                        </button>
                     )}
-
-
                 </nav>
 
                 {/* Mobile Menu Button */}
@@ -85,25 +90,42 @@ export default function Header() {
                 </div>
             </div>
 {menuOpen && (
-    <div className="md:hidden px-6 py-4 bg-white/95 backdrop-blur-md border-t shadow-sm space-y-4">
-        
-        {/* Chat */}
-        <button
+    <div className="md:hidden px-6 py-4 bg-slate-950/95 backdrop-blur-xl border-t border-white/10 shadow-2xl shadow-black/20 space-y-4">
+        <Link
+            href="/"
             onClick={toggleMenu}
-            className="w-full rounded-full text-white px-5 py-2 bg-pink-500 hover:scale-105 transition-transform shadow-md"
+            className="block rounded-full bg-slate-900/90 px-5 py-3 text-center text-white transition hover:bg-slate-800"
+        >
+            Home
+        </Link>
+        <Link
+            href="/chat"
+            onClick={toggleMenu}
+            className="block rounded-full bg-purple-600 px-5 py-3 text-center text-white transition hover:bg-fuchsia-500"
         >
             Chat
-        </button>
+        </Link>
+        {!nickname && (
+            <Link
+                href="/signup"
+                onClick={toggleMenu}
+                className="block rounded-full bg-purple-600 px-5 py-3 text-center text-white transition hover:bg-fuchsia-500"
+            >
+                Sign Up
+            </Link>
+        )}
 
         {nickname ? (
             <>
-                <span className="block text-gray-800 font-medium text-center">Hi {nickname}</span>
+                <div className="rounded-3xl bg-slate-900/90 px-4 py-3 text-center text-sm font-medium text-white">
+                    Hi {nickname}
+                </div>
                 <button
                     onClick={() => {
                         handleLogout();
                         toggleMenu();
                     }}
-                    className="w-full rounded-full px-5 py-2 bg-red-500 text-white hover:bg-red-600 transition shadow-md"
+                    className="w-full rounded-full px-5 py-3 bg-purple-600 text-white hover:bg-fuchsia-500 transition shadow-md shadow-purple-500/20"
                 >
                     Logout
                 </button>
@@ -114,7 +136,7 @@ export default function Header() {
                     router.push('/login');
                     toggleMenu();
                 }}
-                className="w-full rounded-full text-white px-5 py-2 bg-pink-500 hover:scale-105 transition-transform shadow-md"
+                className="w-full rounded-full text-white px-5 py-3 bg-purple-600 hover:bg-fuchsia-500 transition-transform shadow-md shadow-purple-500/20"
             >
                 Login
             </button>

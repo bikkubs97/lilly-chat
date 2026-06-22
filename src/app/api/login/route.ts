@@ -4,12 +4,17 @@ import User from "@/models/user"; // your Mongoose User model
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET!;
-if (!JWT_SECRET) throw new Error("Please add JWT_SECRET to .env");
-
 export async function POST(req: NextRequest) {
   try {
     await connectToDatabase(); // connect to MongoDB via Mongoose
+
+    const JWT_SECRET = process.env.JWT_SECRET;
+    if (!JWT_SECRET) {
+      return NextResponse.json(
+        { error: "Please add JWT_SECRET to .env" },
+        { status: 500 }
+      );
+    }
 
     const body = await req.json();
     const { email, password } = body;

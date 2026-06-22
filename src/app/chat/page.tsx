@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
 import Header from "../_partials/header";
+import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -119,61 +120,96 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-950 text-gray-200">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-950 via-violet-950 to-slate-950 text-slate-100 pt-28">
       <Header />
 
-      <div className="flex-1 overflow-y-auto px-6 py-6 space-y-4 md:mx-28">
-        {messages.map((msg, index) => {
-          if (msg.role === "system") return null;
-
-          return (
-            <div key={index} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-              <div className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm ${
-                msg.role === "user"
-                  ? "bg-purple-700 text-white rounded-br-none shadow-sm"
-                  : "bg-gray-700 text-gray-200 rounded-bl-none shadow-sm"
-              }`}>
-                {msg.role === "assistant" ? (
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                    {msg.content}
-                  </ReactMarkdown>
-                ) : (
-                  <span className="whitespace-pre-line">{msg.content}</span>
-                )}
-              </div>
+      <div className="mx-auto w-full max-w-7xl px-6 pt-4">
+        <div className="mb-3 rounded-3xl border border-white/10 bg-slate-950/95 p-4 shadow-xl shadow-black/20 backdrop-blur-sm">
+          <div className="flex flex-col items-center justify-center gap-4 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
+            <div>
+              <p className="text-sm font-medium text-white">Quick session tools</p>
+              <p className="text-xs text-slate-400">Access your journal or moodboard before sending a message.</p>
             </div>
-          );
-        })}
-
-        {isThinking && (
-          <div className="flex items-center space-x-2 text-gray-400">
-            <div className="px-4 py-2 bg-gray-800 rounded-2xl shadow-sm rounded-bl-none flex items-center">
-              <span className="flex space-x-1">
-                <span className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" />
-                <span className="w-2 h-2 bg-purple-500 rounded-full animate-bounce delay-150" />
-                <span className="w-2 h-2 bg-purple-500 rounded-full animate-bounce delay-300" />
-              </span>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Link href="/journal" className="rounded-full border border-purple-600 bg-slate-900/90 px-4 py-2 text-sm font-medium text-white hover:bg-purple-600/90 transition">
+                Journal
+              </Link>
+              <Link href="/moodboard" className="rounded-full border border-slate-700 bg-slate-900/90 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 transition">
+                Moodboard
+              </Link>
             </div>
-            <span className="text-xs">Lilly is thinking… 🌸</span>
           </div>
-        )}
-
-        <div ref={messagesEndRef} />
+        </div>
       </div>
 
-      <div className="border-t border-gray-700 bg-gray-900/80 backdrop-blur-md px-2 md:px-28 py-3 flex items-center gap-2 sticky bottom-0">
+      <div className="flex-1 overflow-y-auto px-6 py-6">
+        <div className="mx-auto w-full max-w-7xl">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)]">
+            <section className="space-y-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="rounded-full bg-slate-900/80 px-4 py-2 text-sm font-medium text-white">
+                  Chat with Lilly
+                </span>
+                <span className="text-sm text-slate-400">Track your mood after each session.</span>
+              </div>
+            </div>
+
+            {messages.map((msg, index) => {
+              if (msg.role === "system") return null;
+
+              return (
+                <div key={index} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                  <div className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm ${
+                    msg.role === "user"
+                      ? "bg-purple-700 text-white rounded-br-none shadow-purple-500/20 shadow-lg"
+                      : "bg-slate-800 text-slate-100 rounded-bl-none shadow-black/20 shadow-sm"
+                  }`}>
+                    {msg.role === "assistant" ? (
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {msg.content}
+                      </ReactMarkdown>
+                    ) : (
+                      <span className="whitespace-pre-line">{msg.content}</span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+
+            {isThinking && (
+              <div className="flex items-center space-x-2 text-gray-400">
+                <div className="px-4 py-2 bg-gray-800 rounded-2xl shadow-sm rounded-bl-none flex items-center">
+                  <span className="flex space-x-1">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" />
+                    <span className="w-2 h-2 bg-purple-500 rounded-full animate-bounce delay-150" />
+                    <span className="w-2 h-2 bg-purple-500 rounded-full animate-bounce delay-300" />
+                  </span>
+                </div>
+                <span className="text-xs">Lilly is thinking… 🌸</span>
+              </div>
+            )}
+
+            <div ref={messagesEndRef} />
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto w-full max-w-7xl px-6 border-t border-purple-800 bg-slate-950/90 backdrop-blur-md py-4 flex items-center gap-3">
         <textarea
           ref={inputRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyPress}
           placeholder="Type your message..."
-          className="flex-1 resize-none border border-gray-700 rounded-xl px-4 pt-2 bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 min-h-[44px] max-h-[150px]"
+          className="flex-1 resize-none border border-purple-700 rounded-xl px-4 pt-2 bg-slate-900 text-slate-100 focus:outline-none focus:ring-2 focus:ring-fuchsia-400 min-h-[44px] max-h-[150px]"
         />
         <Button
           onClick={handleSendMessage}
           disabled={!input.trim() || isThinking}
-          className="rounded-full bg-pink-500 hover:bg-purple-700 shadow-md transition-all"
+          aria-label="Send message"
+          className="rounded-full bg-purple-600 hover:bg-pink-500 shadow-md transition-all"
         >
           <Send size={22} />
         </Button>

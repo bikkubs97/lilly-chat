@@ -73,7 +73,7 @@ export default function SignupPage() {
 
       if (!res.ok) {
         const data = await res.json();
-        setError(data.message || "Signup failed.");
+        setError(data.error || data.message || "Signup failed.");
         return;
       }
 
@@ -86,15 +86,15 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-900 text-gray-200 flex flex-col">
+    <main className="min-h-screen bg-gradient-to-br from-slate-950 via-violet-950 to-slate-950 text-white flex flex-col">
       <Header />
 
       <section className="flex-1 flex items-center justify-center px-4 py-12">
         <form
           onSubmit={handleSubmit}
-          className="w-full max-w-md bg-gray-800 border border-gray-700 rounded-2xl shadow-xl p-8 space-y-6"
+          className="w-full max-w-md bg-slate-950/95 border border-purple-700 rounded-3xl shadow-2xl shadow-black/30 p-8 space-y-6"
         >
-          <h1 className="text-3xl font-bold text-center text-pink-500">
+          <h1 className="text-3xl font-bold text-center text-white">
             Sign Up to Lilly
           </h1>
 
@@ -111,7 +111,7 @@ export default function SignupPage() {
             placeholder="Nickname"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
-            className="w-full p-3 border border-gray-600 rounded-lg bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full p-3 border border-purple-700 rounded-lg bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
           />
 
           <input
@@ -119,7 +119,7 @@ export default function SignupPage() {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 border border-gray-600 rounded-lg bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full p-3 border border-purple-700 rounded-lg bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
           />
 
           <input
@@ -127,7 +127,7 @@ export default function SignupPage() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 border border-gray-600 rounded-lg bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full p-3 border border-purple-700 rounded-lg bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
           />
 
           <input
@@ -135,12 +135,12 @@ export default function SignupPage() {
             placeholder="Re-enter Password"
             value={rePassword}
             onChange={(e) => setRePassword(e.target.value)}
-            className="w-full p-3 border border-gray-600 rounded-lg bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full p-3 border border-purple-700 rounded-lg bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
           />
 
           <Button
             type="submit"
-            className="w-full bg-pink-500 hover:bg-purple-700 transition-transform rounded-full py-3 text-white text-lg shadow-lg hover:cursor-pointer"
+            className="w-full bg-purple-600 hover:bg-pink-500 transition-transform rounded-full py-3 text-white text-lg shadow-lg hover:cursor-pointer"
           >
             Sign Up
           </Button>

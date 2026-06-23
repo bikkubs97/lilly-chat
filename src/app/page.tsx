@@ -62,7 +62,7 @@ export default function Homepage() {
         </p>
 
         <p className="text-lg text-slate-300 max-w-2xl mx-auto">
-          Chat with empathy, journal your thoughts, and track your emotional journey—all in one safe space. You don't have to create an account to start chatting.
+          Chat with empathy, journal your thoughts, and track your emotional journey—all in one safe space. You don&apos;t have to create an account to start chatting.
         </p>
 
         {/* CTA Buttons */}

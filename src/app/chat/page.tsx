@@ -47,6 +47,8 @@ export default function ChatPage() {
     const trimmed = input.trim();
     if (!trimmed || isThinking) return;
 
+    const token = window.localStorage.getItem("token");
+
     const newMessages: Message[] = [...messages, { role: "user", content: trimmed }];
     setMessages(newMessages);
     setInput("");
@@ -59,10 +61,14 @@ export default function ChatPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${window.localStorage.getItem("token") || ""}`,
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({ messages: newMessages }),
       });
+
+      if (response.status === 401 && token) {
+        window.localStorage.removeItem("token");
+      }
 
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 

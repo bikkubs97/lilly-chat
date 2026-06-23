@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
     const token = getTokenFromRequest(req);
-    const decoded = verifyToken(token);
+    const decoded = token ? verifyToken(token) : null;
 
     if (!process.env.OPENAI_API_KEY) {
       return NextResponse.json({ error: "API key not configured" }, { status: 500 });
@@ -40,7 +40,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "A user message is required" }, { status: 400 });
     }
 
-    const { relevantJournals, recentMoods } = await getPersonalContext(decoded.userId, latestUserMessage.content);
+    const { relevantJournals, recentMoods } = decoded
+      ? await getPersonalContext(decoded.userId, latestUserMessage.content)
+      : { relevantJournals: [], recentMoods: [] };
     const personalContext = buildPersonalContextBlock(relevantJournals, recentMoods);
     const systemPrompt = personalContext
       ? `${LILLY_SYSTEM_PROMPT}\n\n--- PRIVATE USER CONTEXT ---\n${personalContext}\n--- END PRIVATE USER CONTEXT ---`
@@ -63,6 +65,9 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error("Chat API error:", error);
+    if (error instanceof Error && ["JsonWebTokenError", "TokenExpiredError"].includes(error.name)) {
+      return NextResponse.json({ error: "Your session has expired. Please log in again." }, { status: 401 });
+    }
     return NextResponse.json(
       { reply: "Something went wrong. Please try again." },
       { status: 500 }

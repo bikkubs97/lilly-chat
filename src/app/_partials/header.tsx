@@ -3,13 +3,48 @@
 
 import React, { useState, useEffect } from "react";
 import { HeartHandshake, Menu, UserIcon, X } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function Header() {
     const router = useRouter();
+    const pathname = usePathname();
     const [menuOpen, setMenuOpen] = useState(false);
     const [nickname, setNickname] = useState<string | null>(null);
+
+    function isActive(href: string) {
+        if (href === "/") {
+            return pathname === "/";
+        }
+
+        return pathname === href || pathname.startsWith(`${href}/`);
+    }
+
+    function desktopLinkClass(href: string) {
+        return `rounded-full px-3 py-2 transition ${
+            isActive(href)
+                ? "bg-fuchsia-400/15 text-white ring-1 ring-fuchsia-300/40"
+                : "text-slate-200 hover:bg-white/5 hover:text-white"
+        }`;
+    }
+
+    function desktopActionClass(href: string) {
+        return `rounded-full px-5 py-2 text-white transition-transform shadow-md shadow-purple-500/20 hover:scale-105 ${
+            isActive(href) ? "bg-fuchsia-500" : "bg-purple-600 hover:bg-fuchsia-500"
+        }`;
+    }
+
+    function mobileLinkClass(href: string, variant: "quiet" | "action" = "quiet") {
+        if (isActive(href)) {
+            return "block rounded-full border border-fuchsia-300/50 bg-fuchsia-400/20 px-5 py-3 text-center text-white transition";
+        }
+
+        if (variant === "action") {
+            return "block rounded-full bg-purple-600 px-5 py-3 text-center text-white transition hover:bg-fuchsia-500";
+        }
+
+        return "block rounded-full bg-slate-900/90 px-5 py-3 text-center text-white transition hover:bg-slate-800";
+    }
 
     function toggleMenu() {
         setMenuOpen((prev) => !prev);
@@ -47,14 +82,14 @@ export default function Header() {
                 </Link>
                 {/* Desktop Nav */}
                 <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-200">
-                    <Link href="/" className="rounded-full px-3 py-2 transition text-slate-200 hover:bg-white/5 hover:text-white">
+                    <Link href="/" className={desktopLinkClass("/")}>
                         Home
                     </Link>
-                    <Link href="/chat" className="rounded-full px-3 py-2 transition text-slate-200 hover:bg-white/5 hover:text-white">
+                    <Link href="/chat" className={desktopLinkClass("/chat")}>
                         Chat
                     </Link>
                     {!nickname && (
-                        <Link href="/signup" className="rounded-full px-3 py-2 transition text-slate-200 hover:bg-white/5 hover:text-white">
+                        <Link href="/signup" className={desktopLinkClass("/signup")}>
                             Sign Up
                         </Link>
                     )}
@@ -75,7 +110,7 @@ export default function Header() {
                     ) : (
                         <Link
                             href="/login"
-                            className="rounded-full bg-purple-600 px-5 py-2 text-white hover:bg-fuchsia-500 hover:scale-105 transition-transform shadow-md shadow-purple-500/20"
+                            className={desktopActionClass("/login")}
                         >
                             Login
                         </Link>
@@ -94,14 +129,14 @@ export default function Header() {
         <Link
             href="/"
             onClick={toggleMenu}
-            className="block rounded-full bg-slate-900/90 px-5 py-3 text-center text-white transition hover:bg-slate-800"
+            className={mobileLinkClass("/")}
         >
             Home
         </Link>
         <Link
             href="/chat"
             onClick={toggleMenu}
-            className="block rounded-full bg-purple-600 px-5 py-3 text-center text-white transition hover:bg-fuchsia-500"
+            className={mobileLinkClass("/chat", "action")}
         >
             Chat
         </Link>
@@ -109,7 +144,7 @@ export default function Header() {
             <Link
                 href="/signup"
                 onClick={toggleMenu}
-                className="block rounded-full bg-purple-600 px-5 py-3 text-center text-white transition hover:bg-fuchsia-500"
+                className={mobileLinkClass("/signup", "action")}
             >
                 Sign Up
             </Link>
@@ -131,15 +166,13 @@ export default function Header() {
                 </button>
             </>
         ) : (
-            <button
-                onClick={() => {
-                    router.push('/login');
-                    toggleMenu();
-                }}
-                className="w-full rounded-full text-white px-5 py-3 bg-purple-600 hover:bg-fuchsia-500 transition-transform shadow-md shadow-purple-500/20"
+            <Link
+                href="/login"
+                onClick={toggleMenu}
+                className={mobileLinkClass("/login", "action")}
             >
                 Login
-            </button>
+            </Link>
         )}
     </div>
 )}

@@ -88,6 +88,12 @@ export default function Header() {
                     <Link href="/chat" className={desktopLinkClass("/chat")}>
                         Chat
                     </Link>
+                    <Link href="/journal" className={desktopLinkClass("/journal")}>
+                        Journal
+                    </Link>
+                    <Link href="/moodboard" className={desktopLinkClass("/moodboard")}>
+                        Moodboard
+                    </Link>
                     {!nickname && (
                         <Link href="/signup" className={desktopLinkClass("/signup")}>
                             Sign Up
@@ -139,6 +145,20 @@ export default function Header() {
             className={mobileLinkClass("/chat", "action")}
         >
             Chat
+        </Link>
+        <Link
+            href="/journal"
+            onClick={toggleMenu}
+            className={mobileLinkClass("/journal")}
+        >
+            Journal
+        </Link>
+        <Link
+            href="/moodboard"
+            onClick={toggleMenu}
+            className={mobileLinkClass("/moodboard")}
+        >
+            Moodboard
         </Link>
         {!nickname && (
             <Link

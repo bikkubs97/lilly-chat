@@ -56,7 +56,7 @@ export default function Homepage() {
         <p className="font-bold text-purple-400">
           <span className="text-fuchsia-300">Y</span>our{" "}
           <span className="text-fuchsia-300">L</span>oyal{" "}
-          <span className="text-fuchsia-300">L</span>iberal{" "}
+          <span className="text-fuchsia-300">L</span>oving{" "}
           <span className="text-fuchsia-300">I</span>ntelligent{" "}
           <span className="text-fuchsia-300">L</span>istener
         </p>

@@ -1,22 +1,30 @@
 import connectToDatabase from "@/lib/mongodb";
+import { isSmtpConfigured, sendWelcomeEmail } from "@/lib/email";
 import User from "@/models/user";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 export async function POST(request: NextRequest) {
   try {
     await connectToDatabase();
 
     const { nickname, email, password } = await request.json();
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
 
-    if (!nickname || !email || !password) {
+    if (!nickname || !normalizedEmail || !password) {
       return NextResponse.json(
         { error: "Nickname, email, and password are required." },
         { status: 400 }
       );
     }
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({
+      email: new RegExp(`^${escapeRegExp(normalizedEmail)}$`, "i"),
+    });
     if (existingUser) {
       return NextResponse.json(
         { error: "A user with that email already exists." },
@@ -26,7 +34,20 @@ export async function POST(request: NextRequest) {
 
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const newUser = await User.create({ nickname, email, password: hashedPassword });
+    const newUser = await User.create({
+      nickname,
+      email: normalizedEmail,
+      password: hashedPassword,
+    });
+
+    if (isSmtpConfigured()) {
+      sendWelcomeEmail({
+        to: newUser.email,
+        nickname: newUser.nickname,
+      }).catch((emailError) => {
+        console.error("Welcome email error:", emailError);
+      });
+    }
 
     return NextResponse.json(
       {

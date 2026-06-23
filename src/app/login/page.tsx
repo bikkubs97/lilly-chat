@@ -98,6 +98,15 @@ function LoginPage() {
             required
           />
 
+          <div className="text-right">
+            <a
+              href="/forgot-password"
+              className="text-sm font-medium text-fuchsia-200 transition hover:text-pink-400"
+            >
+              Forgot password?
+            </a>
+          </div>
+
           <Button className="w-full bg-purple-600 hover:bg-pink-500 text-white py-2 text-lg rounded-full transition shadow-md hover:cursor-pointer">
             Login
           </Button>

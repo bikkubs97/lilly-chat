@@ -9,6 +9,7 @@ import Header from "./_partials/header";
 import Footer from "./_partials/footer";
 import Link from "next/link";
 import LillyNeuralNetwork from "@/components/illustrations/lilly-neural-network";
+import SupportLilly from "@/components/support/support-lilly";
 
 export default function Homepage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -146,6 +147,10 @@ export default function Homepage() {
           </div>
         </div>
       </section>
+
+      <div id="support-lilly">
+        <SupportLilly />
+      </div>
 
       <Footer />
     </main>

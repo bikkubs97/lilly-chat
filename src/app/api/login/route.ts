@@ -4,6 +4,10 @@ import User from "@/models/user"; // your Mongoose User model
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 export async function POST(req: NextRequest) {
   try {
     await connectToDatabase(); // connect to MongoDB via Mongoose
@@ -18,8 +22,9 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const { email, password } = body;
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
 
-    if (!email || !password) {
+    if (!normalizedEmail || !password) {
       return NextResponse.json(
         { error: "Email and password are required" },
         { status: 400 }
@@ -27,7 +32,9 @@ export async function POST(req: NextRequest) {
     }
 
     // Find user by email using Mongoose
-    const user = await User.findOne({ email });
+    const user = await User.findOne({
+      email: new RegExp(`^${escapeRegExp(normalizedEmail)}$`, "i"),
+    });
     if (!user) {
       return NextResponse.json(
         { error: "Invalid email or password" },

@@ -18,6 +18,8 @@ const userSchema = new Schema({
   nickname: { type: String },
   email: { type: String, required: true },
   password: { type: String, required: true },
+  resetPasswordToken: { type: String, select: false },
+  resetPasswordExpires: { type: Date, select: false },
   journals: { type: [journalSchema], default: [] },
   moodboard: { type: [moodEntrySchema], default: [] },
 });

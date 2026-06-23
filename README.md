@@ -74,7 +74,25 @@ JWT_SECRET=your_super_secret_jwt_key_here
 
 # AI
 OPENAI_API_KEY=sk-your-openai-api-key
+
+# App URL used in password reset emails
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Gmail SMTP
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_SECURE=true
+SMTP_USER=your-gmail-address@gmail.com
+SMTP_PASS=your-16-character-google-app-password
+SMTP_FROM=your-gmail-address@gmail.com
+
+# Stripe Checkout donations
+# Use sk_test_... while this is a test payment page. Swap to sk_live_... for live payments.
+STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
 ```
+
+For Gmail SMTP, use a Google App Password for `SMTP_PASS`. A normal Google
+account password will not work.
 
 ### 4. Run Development Server
 
@@ -131,6 +149,9 @@ src/
 |--------|----------|-------------|
 | POST | `/api/signup` | Create a new user account |
 | POST | `/api/login` | Authenticate and receive JWT |
+| POST | `/api/forgot-password` | Email a password reset link |
+| POST | `/api/reset-password` | Set a new password using reset token |
+| POST | `/api/support/create-checkout-session` | Create Stripe Checkout session for test donations |
 | POST | `/api/chat` | Send message to AI (requires auth) |
 | GET | `/api/journal` | Fetch user's journal entries |
 | POST | `/api/journal` | Create new journal entry |

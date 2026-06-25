@@ -138,26 +138,9 @@ export default function ChatPage() {
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-950 via-violet-950 to-slate-950 text-slate-100 pt-28">
       <Header />
 
-      <div className="mx-auto w-full max-w-7xl px-6 pt-4">
-        <div className="mb-3 rounded-3xl border border-white/10 bg-slate-950/95 p-4 shadow-xl shadow-black/20 backdrop-blur-sm">
-          <div className="flex flex-col items-center justify-center gap-4 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
-            <div>
-              <p className="text-sm font-medium text-white">Quick session tools</p>
-              <p className="text-xs text-slate-400">Access your journal or moodboard before sending a message.</p>
-            </div>
-            <div className="flex flex-wrap justify-center gap-3">
-              <Link href="/journal" className="rounded-full border border-purple-600 bg-slate-900/90 px-4 py-2 text-sm font-medium text-white hover:bg-purple-600/90 transition">
-                Journal
-              </Link>
-              <Link href="/moodboard" className="rounded-full border border-slate-700 bg-slate-900/90 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 transition">
-                Moodboard
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
+     
 
-      <div className="flex-1 overflow-y-auto px-6 py-6">
+      <div className="flex-1 overflow-y-auto px-6 py-6 pb-24">
         <div className="mx-auto w-full max-w-7xl">
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)]">
             <section className="space-y-6">
@@ -216,7 +199,7 @@ export default function ChatPage() {
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-7xl px-6 border-t border-purple-800 bg-slate-950/90 backdrop-blur-md py-4 flex items-center gap-3">
+      <div className="w-full fixed bottom-0 px-4  md:px-28 border-t border-purple-800 bg-slate-950/90 backdrop-blur-md py-4 flex items-center gap-3">
         <textarea
           ref={inputRef}
           value={input}

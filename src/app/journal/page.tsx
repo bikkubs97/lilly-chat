@@ -121,15 +121,14 @@ export default function JournalPage() {
       <Header />
       <main className="mx-auto flex-1 w-full max-w-7xl px-6 pb-14 pt-24">
         <div className="flex items-center justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl font-bold">Journal</h1>
-            <p className="text-sm text-slate-400">Capture your thoughts and feelings anytime.</p>
-          </div>
-          <Link href="/chat" className="rounded-full bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-fuchsia-500 transition">
-            Back to Chat
-          </Link>
-        </div>
-
+      <div>
+  <h1 className="text-3xl font-bold">Journal</h1>
+  <p className="text-sm text-slate-400">Capture your thoughts and feelings anytime.</p>
+  <Link href="/chat" className="inline-block mt-3 rounded-full bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-fuchsia-500 transition">
+    Back to Chat
+  </Link>
+  </div>
+</div>
         {message && (
           <div className="mb-6 rounded-2xl bg-white/5 p-4 text-sm text-slate-100">{message}</div>
         )}

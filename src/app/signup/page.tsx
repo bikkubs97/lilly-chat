@@ -77,8 +77,11 @@ export default function SignupPage() {
         return;
       }
 
-      setSuccess("Signup successful! Redirecting to login...");
-      setTimeout(() => router.push("/login"), 2000);
+      const data = await res.json();
+      setSuccess(data.verificationLink || data.message || "Signup successful. Please check your email to verify your account.");
+      if (!data.verificationLink) {
+        setTimeout(() => router.push("/login"), 3000);
+      }
     } catch (err) {
       console.error(err);
       setError("Something went wrong. Please try again.");

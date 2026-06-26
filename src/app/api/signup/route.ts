@@ -1,8 +1,15 @@
 import connectToDatabase from "@/lib/mongodb";
-import { isSmtpConfigured, sendWelcomeEmail } from "@/lib/email";
+import { isSmtpConfigured, sendVerificationEmail } from "@/lib/email";
 import User from "@/models/user";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
+
+const EMAIL_VERIFICATION_TOKEN_TTL_MS = 24 * 60 * 60 * 1000;
+
+function hashVerificationToken(token: string) {
+  return crypto.createHash("sha256").update(token).digest("hex");
+}
 
 function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -32,26 +39,55 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!isSmtpConfigured() && process.env.NODE_ENV === "production") {
+      return NextResponse.json(
+        { error: "Email verification is temporarily unavailable. Please try again later." },
+        { status: 500 }
+      );
+    }
+
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const verificationToken = crypto.randomBytes(32).toString("hex");
     const newUser = await User.create({
       nickname,
       email: normalizedEmail,
       password: hashedPassword,
+      emailVerified: false,
+      emailVerificationToken: hashVerificationToken(verificationToken),
+      emailVerificationExpires: new Date(Date.now() + EMAIL_VERIFICATION_TOKEN_TTL_MS),
     });
 
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin;
+    const verificationUrl = new URL("/verify-email", appUrl);
+    verificationUrl.searchParams.set("email", normalizedEmail);
+    verificationUrl.searchParams.set("token", verificationToken);
+
     if (isSmtpConfigured()) {
-      sendWelcomeEmail({
-        to: newUser.email,
-        nickname: newUser.nickname,
-      }).catch((emailError) => {
-        console.error("Welcome email error:", emailError);
-      });
+      try {
+        await sendVerificationEmail({
+          to: newUser.email,
+          nickname: newUser.nickname,
+          verificationUrl: verificationUrl.toString(),
+        });
+      } catch (emailError) {
+        await User.findByIdAndDelete(newUser._id);
+
+        console.error("Verification email error:", emailError);
+        return NextResponse.json(
+          { error: "Could not send verification email. Please try again later." },
+          { status: 500 }
+        );
+      }
     }
 
     return NextResponse.json(
       {
-        message: "Signup successful.",
+        message: "Signup successful. Please check your email to verify your account before logging in.",
+        verificationLink:
+          !isSmtpConfigured() && process.env.NODE_ENV !== "production"
+            ? verificationUrl.toString()
+            : undefined,
         user: {
           id: newUser._id,
           nickname: newUser.nickname,

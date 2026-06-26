@@ -13,6 +13,11 @@ Guidelines:
 - Do not claim to be a replacement for a therapist or medical professional. Encourage immediate local emergency support if a user is in imminent danger.
 - Never mention ChatGPT. Your name is Lilly.`;
 
+function cleanNickname(nickname?: string) {
+  if (!nickname) return "";
+  return nickname.trim().replace(/\s+/g, " ").slice(0, 40);
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
@@ -44,8 +49,13 @@ export async function POST(req: NextRequest) {
       ? await getPersonalContext(decoded.userId, latestUserMessage.content)
       : { relevantJournals: [], recentMoods: [] };
     const personalContext = buildPersonalContextBlock(relevantJournals, recentMoods);
-    const systemPrompt = personalContext
-      ? `${LILLY_SYSTEM_PROMPT}\n\n--- PRIVATE USER CONTEXT ---\n${personalContext}\n--- END PRIVATE USER CONTEXT ---`
+    const nickname = cleanNickname(decoded?.nickname);
+    const userProfileContext = nickname
+      ? `USER PROFILE:\n- The user's name/nickname is ${nickname}. Address them by this name when it feels natural and supportive, but do not overuse it.`
+      : "";
+    const contextBlocks = [userProfileContext, personalContext].filter(Boolean).join("\n\n");
+    const systemPrompt = contextBlocks
+      ? `${LILLY_SYSTEM_PROMPT}\n\n--- PRIVATE USER CONTEXT ---\n${contextBlocks}\n--- END PRIVATE USER CONTEXT ---`
       : LILLY_SYSTEM_PROMPT;
 
     // Send messages to OpenAI Chat API

@@ -10,6 +10,12 @@ type SendWelcomeEmailParams = {
   nickname?: string;
 };
 
+type SendVerificationEmailParams = {
+  to: string;
+  nickname?: string;
+  verificationUrl: string;
+};
+
 function getSmtpPort() {
   const port = Number(process.env.SMTP_PORT || 465);
   return Number.isNaN(port) ? 465 : port;
@@ -74,6 +80,43 @@ export async function sendPasswordResetEmail({
           </a>
         </p>
         <p>This link expires in 1 hour. If you did not request this, you can ignore this email.</p>
+      </div>
+    `,
+  });
+}
+
+export async function sendVerificationEmail({
+  to,
+  nickname,
+  verificationUrl,
+}: SendVerificationEmailParams) {
+  const transporter = createTransporter();
+  const greeting = nickname ? `Hi ${nickname},` : "Hi there,";
+
+  await transporter.sendMail({
+    from: getFromAddress(),
+    to,
+    subject: "Verify your Lilly email",
+    text: [
+      greeting,
+      "",
+      "Welcome to Lilly. Please verify your email address to activate your account.",
+      "",
+      `Open this link to verify your email: ${verificationUrl}`,
+      "",
+      "This link expires in 24 hours. If you did not create a Lilly account, you can ignore this email.",
+    ].join("\n"),
+    html: `
+      <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #111827;">
+        <h1 style="font-size: 20px;">Verify your Lilly email</h1>
+        <p>${greeting}</p>
+        <p>Welcome to Lilly. Please verify your email address to activate your account.</p>
+        <p>
+          <a href="${verificationUrl}" style="display: inline-block; padding: 12px 18px; border-radius: 999px; background: #9333ea; color: #ffffff; text-decoration: none;">
+            Verify email
+          </a>
+        </p>
+        <p>This link expires in 24 hours. If you did not create a Lilly account, you can ignore this email.</p>
       </div>
     `,
   });

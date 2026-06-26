@@ -5,6 +5,7 @@ import Header from "../_partials/header";
 import Footer from "../_partials/footer";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import ScrollReveal from "@/components/ui/scroll-reveal";
 
 interface JournalEntry {
   _id?: string;
@@ -134,7 +135,7 @@ export default function JournalPage() {
         )}
 
         {isAuthenticated === false ? (
-          <div className="rounded-3xl border border-purple-700/30 bg-slate-950/80 p-10 text-center shadow-lg shadow-black/20">
+          <ScrollReveal className="rounded-3xl border border-purple-700/30 bg-slate-950/80 p-10 text-center shadow-lg shadow-black/20">
             <h2 className="text-3xl font-semibold text-white mb-4">Login required</h2>
             <p className="mx-auto max-w-xl text-sm text-slate-300 mb-8">
               You should be logged in to write journals and use the mood tracker.
@@ -147,57 +148,60 @@ export default function JournalPage() {
                 <Link href="/signup">Sign Up</Link>
               </Button>
             </div>
-          </div>
+          </ScrollReveal>
         ) : (
           <>
-            <form onSubmit={handleSubmit} className="mt-8 mb-10 rounded-3xl bg-slate-950/80 border border-purple-700 p-6 shadow-lg shadow-black/20">
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-slate-200 mb-2">Title</label>
-                <input
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="w-full rounded-2xl border border-purple-700 bg-slate-900 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
-                  placeholder="Write a title for this entry"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-slate-200 mb-2">Entry</label>
-                <textarea
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  rows={10}
-                  className="w-full rounded-2xl border border-purple-700 bg-slate-900 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
-                  placeholder="Write about how you feel today..."
-                />
-              </div>
-              <Button type="submit" disabled={isSaving}>
-                {isSaving ? "Saving..." : "Save Journal"}
-              </Button>
-            </form>
+            <ScrollReveal className="mt-8 mb-10">
+              <form onSubmit={handleSubmit} className="rounded-3xl bg-slate-950/80 border border-purple-700 p-6 shadow-lg shadow-black/20">
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-slate-200 mb-2">Title</label>
+                  <input
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="w-full rounded-2xl border border-purple-700 bg-slate-900 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
+                    placeholder="Write a title for this entry"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-slate-200 mb-2">Entry</label>
+                  <textarea
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    rows={10}
+                    className="w-full rounded-2xl border border-purple-700 bg-slate-900 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
+                    placeholder="Write about how you feel today..."
+                  />
+                </div>
+                <Button type="submit" disabled={isSaving}>
+                  {isSaving ? "Saving..." : "Save Journal"}
+                </Button>
+              </form>
+            </ScrollReveal>
 
             <section className="space-y-4">
               <h2 className="text-2xl font-semibold text-white">{journalsHeading}</h2>
               {entries.length === 0 ? (
-                <div className="rounded-3xl border border-white/10 bg-slate-950/80 p-8 text-slate-300">
+                <ScrollReveal className="rounded-3xl border border-white/10 bg-slate-950/80 p-8 text-slate-300">
                   No journal entries yet. Use the form above to add your first note.
-                </div>
+                </ScrollReveal>
               ) : (
-                entries.map((entry) => (
-                  <Link
-                    key={entry._id ?? entry.title}
-                    href={`/journal/${entry._id}`}
-                    className="block rounded-3xl border border-purple-700/30 bg-slate-950/80 p-6 shadow-lg shadow-black/20 transition hover:border-fuchsia-400/70 hover:bg-slate-900/90 focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
-                  >
-                    <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-                      <h2 className="min-w-0 break-words text-xl font-semibold text-white">{entry.title}</h2>
-                      <span className="shrink-0 text-sm text-slate-400">{new Date(entry.createdAt).toLocaleDateString()}</span>
-                    </div>
-                    <p className="break-words text-slate-200">
-                      {entry.content.slice(0, JOURNAL_PREVIEW_LENGTH)}
-                      {entry.content.length > JOURNAL_PREVIEW_LENGTH ? "…" : ""}
-                    </p>
-                    <span className="mt-4 inline-block text-sm font-medium text-fuchsia-300">Read full entry →</span>
-                  </Link>
+                entries.map((entry, index) => (
+                  <ScrollReveal key={entry._id ?? entry.title} delay={Math.min(index, 4) * 0.05}>
+                    <Link
+                      href={`/journal/${entry._id}`}
+                      className="block rounded-3xl border border-purple-700/30 bg-slate-950/80 p-6 shadow-lg shadow-black/20 transition hover:border-fuchsia-400/70 hover:bg-slate-900/90 focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
+                    >
+                      <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                        <h2 className="min-w-0 break-words text-xl font-semibold text-white">{entry.title}</h2>
+                        <span className="shrink-0 text-sm text-slate-400">{new Date(entry.createdAt).toLocaleDateString()}</span>
+                      </div>
+                      <p className="break-words text-slate-200">
+                        {entry.content.slice(0, JOURNAL_PREVIEW_LENGTH)}
+                        {entry.content.length > JOURNAL_PREVIEW_LENGTH ? "…" : ""}
+                      </p>
+                      <span className="mt-4 inline-block text-sm font-medium text-fuchsia-300">Read full entry →</span>
+                    </Link>
+                  </ScrollReveal>
                 ))
               )}
             </section>

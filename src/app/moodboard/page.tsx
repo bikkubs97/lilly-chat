@@ -5,6 +5,7 @@ import Header from "../_partials/header";
 import Footer from "../_partials/footer";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import ScrollReveal from "@/components/ui/scroll-reveal";
 
 interface MoodEntry {
   _id?: string;
@@ -189,7 +190,7 @@ export default function MoodboardPage() {
         )}
 
         {isAuthenticated === false ? (
-          <div className="mb-10 rounded-4xl border border-white/10 bg-slate-950/80 p-10 text-center shadow-xl shadow-black/20">
+          <ScrollReveal className="mb-10 rounded-4xl border border-white/10 bg-slate-950/80 p-10 text-center shadow-xl shadow-black/20">
             <h2 className="text-3xl font-semibold text-white mb-4">Login required</h2>
             <p className="mx-auto max-w-2xl text-sm text-slate-300 mb-8">
               You should be logged in to use the mood tracker and save mood entries.
@@ -202,10 +203,10 @@ export default function MoodboardPage() {
                 <Link href="/signup">Sign Up</Link>
               </Button>
             </div>
-          </div>
+          </ScrollReveal>
         ) : (
           <>
-            <section className="mb-10 overflow-hidden rounded-4xl border border-white/10 bg-slate-950/80 p-3 shadow-xl shadow-black/20 sm:p-6">
+            <ScrollReveal className="mb-10 overflow-hidden rounded-4xl border border-white/10 bg-slate-950/80 p-3 shadow-xl shadow-black/20 sm:p-6">
               <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h2 className="text-2xl font-semibold">Mood Calendar</h2>
@@ -274,16 +275,16 @@ export default function MoodboardPage() {
                   );
                 })}
               </div>
-            </section>
+            </ScrollReveal>
 
             <section className="space-y-4">
               {entries.length === 0 ? (
-                <div className="rounded-3xl border border-white/10 bg-slate-950/80 p-8 text-slate-300">
+                <ScrollReveal className="rounded-3xl border border-white/10 bg-slate-950/80 p-8 text-slate-300">
                   No moodboard entries yet. End a chat session to save your mood.
-                </div>
+                </ScrollReveal>
               ) : (
-                entries.map((entry) => (
-                  <div key={entry._id ?? entry.date} className="rounded-3xl border border-white/10 bg-slate-950/80 p-6 shadow-lg shadow-black/20">
+                entries.map((entry, index) => (
+                  <ScrollReveal key={entry._id ?? entry.date} delay={Math.min(index, 4) * 0.05} className="rounded-3xl border border-white/10 bg-slate-950/80 p-6 shadow-lg shadow-black/20">
                     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                       <div>
                         <p className="text-sm uppercase tracking-[0.2em] text-slate-400">{new Date(entry.date).toLocaleDateString()}</p>
@@ -295,7 +296,7 @@ export default function MoodboardPage() {
                       </div>
                     </div>
                     <p className="mt-4 text-slate-200 whitespace-pre-line">{entry.note}</p>
-                  </div>
+                  </ScrollReveal>
                 ))
               )}
             </section>

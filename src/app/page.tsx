@@ -10,6 +10,7 @@ import Footer from "./_partials/footer";
 import Link from "next/link";
 import LillyNeuralNetwork from "@/components/illustrations/lilly-neural-network";
 import SupportLilly from "@/components/support/support-lilly";
+import ScrollReveal from "@/components/ui/scroll-reveal";
 
 export default function Homepage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -97,7 +98,7 @@ export default function Homepage() {
           </div>
 
           <div className="grid gap-8 lg:grid-cols-3">
-            <div className="rounded-3xl border border-purple-600/60 bg-slate-950/80 p-8 text-center shadow-[0_0_20px_rgba(147,51,234,0.3),0_20px_60px_rgba(15,23,42,0.35)] backdrop-blur-xl transition duration-300 hover:border-purple-500 hover:shadow-[0_0_30px_rgba(147,51,234,0.5),0_20px_60px_rgba(15,23,42,0.45)]">
+            <ScrollReveal className="rounded-3xl border border-purple-600/60 bg-slate-950/80 p-8 text-center shadow-[0_0_20px_rgba(147,51,234,0.3),0_20px_60px_rgba(15,23,42,0.35)] backdrop-blur-xl transition duration-300 hover:border-purple-500 hover:shadow-[0_0_30px_rgba(147,51,234,0.5),0_20px_60px_rgba(15,23,42,0.45)]">
               <div className="flex items-center justify-center mb-5">
                 <MessageCircle className="w-10 h-10 text-fuchsia-300" />
               </div>
@@ -106,9 +107,9 @@ export default function Homepage() {
                 Speak with Lilly anytime, day or night. The chat is designed to feel supportive, nonjudgmental,
                 and easy to use—whether you need a quick check-in, a safe place to vent, or helpful emotional guidance.
               </p>
-            </div>
+            </ScrollReveal>
 
-            <div className="rounded-3xl border border-purple-600/60 bg-slate-950/80 p-8 text-center shadow-[0_0_20px_rgba(147,51,234,0.3),0_20px_60px_rgba(15,23,42,0.35)] backdrop-blur-xl transition duration-300 hover:border-purple-500 hover:shadow-[0_0_30px_rgba(147,51,234,0.5),0_20px_60px_rgba(15,23,42,0.45)]">
+            <ScrollReveal delay={0.08} className="rounded-3xl border border-purple-600/60 bg-slate-950/80 p-8 text-center shadow-[0_0_20px_rgba(147,51,234,0.3),0_20px_60px_rgba(15,23,42,0.35)] backdrop-blur-xl transition duration-300 hover:border-purple-500 hover:shadow-[0_0_30px_rgba(147,51,234,0.5),0_20px_60px_rgba(15,23,42,0.45)]">
               <div className="flex items-center justify-center mb-5">
                 <Heart className="w-10 h-10 text-fuchsia-300" />
               </div>
@@ -117,9 +118,9 @@ export default function Homepage() {
                 Capture your thoughts, track moments of growth, and revisit your feelings over time.
                 Lilly&apos;s journal keeps your entries secure while helping you notice patterns and progress.
               </p>
-            </div>
+            </ScrollReveal>
 
-            <div className="rounded-3xl border border-purple-600/60 bg-slate-950/80 p-8 text-center shadow-[0_0_20px_rgba(147,51,234,0.3),0_20px_60px_rgba(15,23,42,0.35)] backdrop-blur-xl transition duration-300 hover:border-purple-500 hover:shadow-[0_0_30px_rgba(147,51,234,0.5),0_20px_60px_rgba(15,23,42,0.45)]">
+            <ScrollReveal delay={0.16} className="rounded-3xl border border-purple-600/60 bg-slate-950/80 p-8 text-center shadow-[0_0_20px_rgba(147,51,234,0.3),0_20px_60px_rgba(15,23,42,0.35)] backdrop-blur-xl transition duration-300 hover:border-purple-500 hover:shadow-[0_0_30px_rgba(147,51,234,0.5),0_20px_60px_rgba(15,23,42,0.45)]">
               <div className="flex items-center justify-center mb-5">
                 <Zap className="w-10 h-10 text-fuchsia-300" />
               </div>
@@ -128,17 +129,17 @@ export default function Homepage() {
                 Log how you feel after each chat session and watch your moodboard grow.
                 The mood tracker turns your emotions into a visual calendar so you can understand trends and gain insight.
               </p>
-            </div>
+            </ScrollReveal>
           </div>
 
-          <div className="rounded-3xl border border-purple-600/60 bg-slate-950/80 p-8 text-center shadow-[0_0_20px_rgba(147,51,234,0.3),0_20px_60px_rgba(15,23,42,0.35)] backdrop-blur-xl transition duration-300 hover:border-purple-500 hover:shadow-[0_0_30px_rgba(147,51,234,0.5),0_20px_60px_rgba(15,23,42,0.45)]">
+          <ScrollReveal className="rounded-3xl border border-purple-600/60 bg-slate-950/80 p-8 text-center shadow-[0_0_20px_rgba(147,51,234,0.3),0_20px_60px_rgba(15,23,42,0.35)] backdrop-blur-xl transition duration-300 hover:border-purple-500 hover:shadow-[0_0_30px_rgba(147,51,234,0.5),0_20px_60px_rgba(15,23,42,0.45)]">
             <h4 className="text-xl font-semibold text-white mb-3">Everything Connected</h4>
             <p className="text-sm text-slate-300 leading-relaxed">
               Lilly brings together caring conversation, daily reflection, and mood analysis in one place. Your journal entries
               and moodboard work alongside the chat so you can feel supported today while building a clearer emotional picture
               for tomorrow.
             </p>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 

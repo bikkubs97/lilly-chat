@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { HeartHandshake, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ScrollReveal from "@/components/ui/scroll-reveal";
 
 const presetAmounts = [3, 5, 10, 25];
 
@@ -69,7 +70,7 @@ export default function SupportLilly() {
           </p>
         </div>
 
-        <div className="rounded-3xl border border-purple-600/60 bg-slate-950/90 p-6 shadow-[0_0_20px_rgba(147,51,234,0.28),0_20px_60px_rgba(15,23,42,0.35)]">
+        <ScrollReveal className="rounded-3xl border border-purple-600/60 bg-slate-950/90 p-6 shadow-[0_0_20px_rgba(147,51,234,0.28),0_20px_60px_rgba(15,23,42,0.35)]">
           <div className="grid grid-cols-2 gap-3">
             {presetAmounts.map((amount) => (
               <button
@@ -128,7 +129,7 @@ export default function SupportLilly() {
               `Support with $${donationAmount || selectedAmount}`
             )}
           </Button>
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   );

@@ -16,9 +16,13 @@ interface MoodEntry {
 
 const moodColors = [
   { keywords: ["suicidal", "extreme", "crisis", "hopeless", "danger"], className: "bg-red-500/10 border-red-500 text-red-200" },
+  { keywords: ["anxious", "anxiety", "panic", "worried", "nervous", "fear"], className: "bg-amber-500/10 border-amber-500 text-amber-200" },
+  { keywords: ["stressed", "stress", "overwhelmed", "burnout", "exhausted", "tired"], className: "bg-orange-500/10 border-orange-500 text-orange-200" },
+  { keywords: ["angry", "anger", "frustrated", "irritated", "resentful"], className: "bg-rose-500/10 border-rose-500 text-rose-200" },
+  { keywords: ["lonely", "alone", "isolated", "empty"], className: "bg-indigo-500/10 border-indigo-500 text-indigo-200" },
   { keywords: ["depression", "depressed", "depressing", "sadness"], className: "bg-blue-500/10 border-blue-500 text-blue-200" },
   { keywords: ["sad", "blue", "gloomy"], className: "bg-blue-500/10 border-blue-500 text-blue-200" },
-  { keywords: ["happy", "joy", "good", "cheerful", "content"], className: "bg-emerald-500/10 border-emerald-500 text-emerald-200" },
+  { keywords: ["happy", "joy", "good", "cheerful", "content", "hopeful", "grateful"], className: "bg-emerald-500/10 border-emerald-500 text-emerald-200" },
   { keywords: ["calm", "neutral", "relaxed", "okay"], className: "bg-slate-500/10 border-slate-500 text-slate-200" },
 ];
 
@@ -35,10 +39,22 @@ function getMoodBadgeText(mood: string) {
   if (normalized.includes("suicid") || normalized.includes("extreme") || normalized.includes("danger") || normalized.includes("hopeless")) {
     return "Critical";
   }
+  if (normalized.includes("anx") || normalized.includes("panic") || normalized.includes("worried") || normalized.includes("nervous")) {
+    return "Anxious";
+  }
+  if (normalized.includes("stress") || normalized.includes("overwhelm") || normalized.includes("burnout") || normalized.includes("exhaust")) {
+    return "Stressed";
+  }
+  if (normalized.includes("angry") || normalized.includes("anger") || normalized.includes("frustrat") || normalized.includes("irritat")) {
+    return "Angry";
+  }
+  if (normalized.includes("lonely") || normalized.includes("alone") || normalized.includes("isolat") || normalized.includes("empty")) {
+    return "Lonely";
+  }
   if (normalized.includes("sad") || normalized.includes("blue") || normalized.includes("depress")) {
     return "Low";
   }
-  if (normalized.includes("happy") || normalized.includes("joy") || normalized.includes("good") || normalized.includes("content")) {
+  if (normalized.includes("happy") || normalized.includes("joy") || normalized.includes("good") || normalized.includes("content") || normalized.includes("hopeful") || normalized.includes("grateful")) {
     return "High";
   }
   if (normalized.includes("calm") || normalized.includes("neutral") || normalized.includes("relaxed")) {

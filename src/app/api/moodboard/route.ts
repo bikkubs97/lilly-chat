@@ -83,13 +83,6 @@ ${conversationText}`;
       }
     })();
 
-    await connectToDatabase();
-    const user = await User.findById(decoded.userId);
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
     const moodEntry = {
       date: new Date(),
       mood: analysis.mood || "neutral",
@@ -97,8 +90,16 @@ ${conversationText}`;
       note: analysis.note || "Mood registered automatically after session end.",
     };
 
-    user.moodboard = [...(user.moodboard || []), moodEntry];
-    await user.save();
+    await connectToDatabase();
+    const user = await User.findByIdAndUpdate(
+      decoded.userId,
+      { $push: { moodboard: moodEntry } },
+      { new: true }
+    );
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
 
     return NextResponse.json({ moodEntry });
   } catch (error) {

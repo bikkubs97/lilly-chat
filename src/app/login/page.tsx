@@ -61,7 +61,7 @@ function LoginPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-950 via-violet-950 to-slate-950 text-white">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-950 via-violet-950 to-slate-950 text-white mt-10">
       <Header />
 
       <main className="flex-1 flex items-center justify-center px-4 py-12">
@@ -101,13 +101,13 @@ function LoginPage() {
           <div className="text-right">
             <a
               href="/forgot-password"
-              className="text-sm font-medium text-fuchsia-200 transition hover:text-pink-400"
+              className="text-sm font-medium text-fuchsia-200 transition-colors hover:text-fuchsia-300"
             >
               Forgot password?
             </a>
           </div>
 
-          <Button className="w-full bg-purple-600 hover:bg-pink-500 text-white py-2 text-lg rounded-full transition shadow-md hover:cursor-pointer">
+          <Button className="w-full" size="lg">
             Login
           </Button>
 
@@ -115,7 +115,7 @@ function LoginPage() {
             Don’t have an account?{" "}
             <a
               href="/signup"
-              className="font-medium text-white hover:text-pink-500 transition"
+              className="font-medium text-fuchsia-200 transition-colors hover:text-fuchsia-300"
             >
               Sign up
             </a>

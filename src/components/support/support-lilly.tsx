@@ -81,8 +81,8 @@ export default function SupportLilly() {
                 }}
                 className={`rounded-xl border px-4 py-3 text-sm font-semibold transition ${
                   !customAmount && selectedAmount === amount
-                    ? "border-fuchsia-300 bg-fuchsia-400/20 text-white"
-                    : "border-purple-700 bg-slate-900 text-slate-200 hover:border-fuchsia-300"
+                    ? "border-fuchsia-300 bg-fuchsia-400/20 text-white shadow-sm shadow-fuchsia-500/10"
+                    : "border-white/10 bg-slate-900 text-slate-200 hover:border-fuchsia-300/50 hover:bg-slate-800"
                 }`}
               >
                 ${amount}
@@ -116,7 +116,8 @@ export default function SupportLilly() {
             type="button"
             disabled={isLoading}
             onClick={startCheckout}
-            className="mt-5 w-full rounded-full bg-purple-600 py-6 text-base text-white shadow-md shadow-purple-500/20 transition hover:bg-pink-500 hover:cursor-pointer"
+            className="mt-5 w-full"
+            size="lg"
           >
             {isLoading ? (
               <>

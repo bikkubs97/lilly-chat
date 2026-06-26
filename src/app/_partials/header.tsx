@@ -5,6 +5,9 @@ import React, { useState, useEffect } from "react";
 import { HeartHandshake, Menu, UserIcon, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+
+const CHAT_SESSION_STORAGE_KEY = "lilly.chatSessionMessages";
 
 export default function Header() {
     const router = useRouter();
@@ -21,7 +24,7 @@ export default function Header() {
     }
 
     function desktopLinkClass(href: string) {
-        return `rounded-full px-3 py-2 transition ${
+        return `rounded-full px-3 py-2 transition-colors duration-200 ${
             isActive(href)
                 ? "bg-fuchsia-400/15 text-white ring-1 ring-fuchsia-300/40"
                 : "text-slate-200 hover:bg-white/5 hover:text-white"
@@ -29,21 +32,21 @@ export default function Header() {
     }
 
     function desktopActionClass(href: string) {
-        return `rounded-full px-5 py-2 text-white transition-transform shadow-md shadow-purple-500/20 hover:scale-105 ${
-            isActive(href) ? "bg-fuchsia-500" : "bg-purple-600 hover:bg-fuchsia-500"
+        return `inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-semibold text-white shadow-md shadow-purple-500/20 transition-all duration-200 ${
+            isActive(href) ? "bg-fuchsia-500" : "bg-purple-600 hover:-translate-y-0.5 hover:bg-fuchsia-500 hover:shadow-lg hover:shadow-fuchsia-500/20"
         }`;
     }
 
     function mobileLinkClass(href: string, variant: "quiet" | "action" = "quiet") {
         if (isActive(href)) {
-            return "block rounded-full border border-fuchsia-300/50 bg-fuchsia-400/20 px-5 py-3 text-center text-white transition";
+            return "block rounded-full border border-fuchsia-300/50 bg-fuchsia-400/20 px-5 py-3 text-center font-semibold text-white transition-colors duration-200";
         }
 
         if (variant === "action") {
-            return "block rounded-full bg-purple-600 px-5 py-3 text-center text-white transition hover:bg-fuchsia-500";
+            return "block rounded-full bg-purple-600 px-5 py-3 text-center font-semibold text-white shadow-md shadow-purple-500/20 transition-all duration-200 hover:bg-fuchsia-500";
         }
 
-        return "block rounded-full bg-slate-900/90 px-5 py-3 text-center text-white transition hover:bg-slate-800";
+        return "block rounded-full border border-white/10 bg-slate-900/90 px-5 py-3 text-center font-semibold text-white transition-colors duration-200 hover:border-fuchsia-300/40 hover:bg-slate-800";
     }
 
     function toggleMenu() {
@@ -64,7 +67,42 @@ export default function Header() {
         }
     }, []);
 
-    function handleLogout() {
+    async function saveMoodBeforeLogout(token: string) {
+        const storedMessages = localStorage.getItem(CHAT_SESSION_STORAGE_KEY);
+        if (!storedMessages) return;
+
+        try {
+            const messages = JSON.parse(storedMessages);
+            const hasUserMessages = Array.isArray(messages) && messages.some((message) => message?.role === "user");
+
+            if (!hasUserMessages) {
+                localStorage.removeItem(CHAT_SESSION_STORAGE_KEY);
+                return;
+            }
+
+            const response = await fetch("/api/moodboard", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ messages }),
+            });
+
+            if (response.ok) {
+                localStorage.removeItem(CHAT_SESSION_STORAGE_KEY);
+            }
+        } catch (error) {
+            console.error("Unable to register mood before logout", error);
+        }
+    }
+
+    async function handleLogout() {
+        const token = localStorage.getItem("token");
+        if (token) {
+            await saveMoodBeforeLogout(token);
+        }
+
         localStorage.removeItem("token");
         setNickname(null);
         router.push("/login");
@@ -106,12 +144,11 @@ export default function Header() {
                                 <UserIcon />
                                 <p>{nickname}</p>
                             </div>
-                            <button
+                            <Button
                                 onClick={handleLogout}
-                                className="rounded-full text-white px-5 py-2 bg-purple-600 hover:bg-fuchsia-500 hover:scale-105 transition-transform shadow-md shadow-purple-500/20"
                             >
                                 Logout
-                            </button>
+                            </Button>
                         </>
                     ) : (
                         <Link
@@ -125,9 +162,9 @@ export default function Header() {
 
                 {/* Mobile Menu Button */}
                 <div className="md:hidden">
-                    <button className="text-white" onClick={toggleMenu}>
+                    <Button variant="ghost" size="icon" onClick={toggleMenu} aria-label="Toggle menu">
                         {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-                    </button>
+                    </Button>
                 </div>
             </div>
 {menuOpen && (
@@ -175,15 +212,15 @@ export default function Header() {
                 <div className="rounded-3xl bg-slate-900/90 px-4 py-3 text-center text-sm font-medium text-white">
                     Hi {nickname}
                 </div>
-                <button
+                <Button
                     onClick={() => {
                         handleLogout();
                         toggleMenu();
                     }}
-                    className="w-full rounded-full px-5 py-3 bg-purple-600 text-white hover:bg-fuchsia-500 transition shadow-md shadow-purple-500/20"
+                    className="w-full"
                 >
                     Logout
-                </button>
+                </Button>
             </>
         ) : (
             <Link

@@ -100,7 +100,8 @@ export default function ForgotPasswordPage() {
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-purple-600 hover:bg-pink-500 text-white py-2 text-lg rounded-full transition shadow-md hover:cursor-pointer"
+            className="w-full"
+            size="lg"
           >
             {isSubmitting ? "Creating link..." : "Create reset link"}
           </Button>
@@ -109,7 +110,7 @@ export default function ForgotPasswordPage() {
             Remembered it?{" "}
             <Link
               href="/login"
-              className="font-medium text-white transition hover:text-pink-500"
+              className="font-medium text-fuchsia-200 transition-colors hover:text-fuchsia-300"
             >
               Log in
             </Link>

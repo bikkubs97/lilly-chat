@@ -24,16 +24,12 @@ export default function NotFound() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/">
-              <Button className="rounded-full bg-purple-600 hover:bg-pink-500 px-8 py-3 text-lg transition-all hover:scale-105">
-                Back to Home
-              </Button>
-            </Link>
-            <Link href="/chat">
-              <Button className="rounded-full border border-purple-600 bg-transparent hover:bg-purple-600/20 px-8 py-3 text-lg transition-all hover:scale-105">
-                Start Chatting
-              </Button>
-            </Link>
+            <Button asChild size="lg">
+              <Link href="/">Back to Home</Link>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <Link href="/chat">Start Chatting</Link>
+            </Button>
           </div>
         </div>
       </div>

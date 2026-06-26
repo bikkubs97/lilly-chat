@@ -12,6 +12,8 @@ interface Message {
   content: string;
 }
 
+const CHAT_SESSION_STORAGE_KEY = "lilly.chatSessionMessages";
+
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -35,6 +37,14 @@ export default function ChatPage() {
   // Scroll to bottom when messages or typing changes
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  useEffect(() => {
+    const hasUserMessages = messages.some((message) => message.role === "user");
+
+    if (hasUserMessages) {
+      window.localStorage.setItem(CHAT_SESSION_STORAGE_KEY, JSON.stringify(messages));
+    }
   }, [messages]);
 
   function formatText(text: string) {
@@ -211,7 +221,7 @@ export default function ChatPage() {
           onClick={handleSendMessage}
           disabled={!input.trim() || isThinking}
           aria-label="Send message"
-          className="rounded-full bg-purple-600 hover:bg-pink-500 shadow-md transition-all"
+          size="icon"
         >
           <Send size={22} />
         </Button>

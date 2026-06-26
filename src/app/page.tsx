@@ -68,24 +68,18 @@ export default function Homepage() {
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4">
-          <Link href="/chat" className="flex items-center gap-2">
-            <Button
-              size="lg"
-              className="rounded-full shadow-2xl shadow-purple-500/30 px-10 py-6 text-lg bg-purple-600 hover:bg-purple-500 transition-transform hover:scale-105 hover:cursor-pointer"
-            >
+          <Button asChild size="lg" className="px-10">
+            <Link href="/chat">
               <MessageCircle />
               Chat Now
-            </Button>
-          </Link>
-          {!isLoggedIn && (
-            <Link href="/signup">
-              <Button
-                size="lg"
-                className="rounded-full shadow-2xl shadow-purple-500/25 px-10 py-6 text-lg bg-purple-600 hover:bg-purple-500 transition-transform hover:scale-105 hover:cursor-pointer"
-              >
-                Sign Up
-              </Button>
             </Link>
+          </Button>
+          {!isLoggedIn && (
+            <Button asChild size="lg" variant="outline" className="px-10">
+              <Link href="/signup">
+                Sign Up
+              </Link>
+            </Button>
           )}
         </div>
       </section>

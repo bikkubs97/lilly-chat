@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Header from "../_partials/header";
 import Footer from "../_partials/footer";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 interface MoodEntry {
   _id?: string;
@@ -46,9 +47,18 @@ function getMoodBadgeText(mood: string) {
   return "Balanced";
 }
 
+function getLocalDateKey(date: string | Date) {
+  const value = new Date(date);
+  const year = value.getFullYear();
+  const month = String(value.getMonth() + 1).padStart(2, "0");
+  const day = String(value.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
 function buildCalendarEntries(entries: MoodEntry[]) {
   return entries.reduce<Record<string, MoodEntry[]>>((acc, entry) => {
-    const dateKey = new Date(entry.date).toISOString().slice(0, 10);
+    const dateKey = getLocalDateKey(entry.date);
     if (!acc[dateKey]) acc[dateKey] = [];
     acc[dateKey].push(entry);
     return acc;
@@ -67,7 +77,7 @@ function getMonthDays(year: number, month: number) {
 
   for (let day = 1; day <= daysInMonth; day++) {
     const date = new Date(year, month, day);
-    cells.push({ day, dateKey: date.toISOString().slice(0, 10) });
+    cells.push({ day, dateKey: getLocalDateKey(date) });
   }
 
   while (cells.length % 7 !== 0) {
@@ -106,8 +116,11 @@ export default function MoodboardPage() {
       }
 
       const data = await res.json();
-      setEntries(data.moodboard || []);
-      setCalendarMap(buildCalendarEntries(data.moodboard || []));
+      const moodboard = [...(data.moodboard || [])].sort(
+        (a: MoodEntry, b: MoodEntry) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+      setEntries(moodboard);
+      setCalendarMap(buildCalendarEntries(moodboard));
     } catch (error) {
       console.error(error);
       setMessage("Could not load moodboard.");
@@ -150,9 +163,9 @@ export default function MoodboardPage() {
               Visualize your mood trends and session notes over time. Colored moods highlight the emotional tone at a glance.
             </p>
           </div>
-          <Link href="/chat" className="inline-flex items-center rounded-full bg-purple-600 px-5 py-3 text-sm font-medium text-white hover:bg-fuchsia-500 transition">
-            Back to Chat
-          </Link>
+          <Button asChild>
+            <Link href="/chat">Back to Chat</Link>
+          </Button>
         </div>
 
         {message && (
@@ -166,12 +179,12 @@ export default function MoodboardPage() {
               You should be logged in to use the mood tracker and save mood entries.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link href="/login" className="inline-flex items-center justify-center rounded-full bg-fuchsia-500 px-6 py-3 text-sm font-semibold text-white hover:bg-fuchsia-400 transition">
-                Login
-              </Link>
-              <Link href="/signup" className="inline-flex items-center justify-center rounded-full border border-white/10 bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-800 transition">
-                Sign Up
-              </Link>
+              <Button asChild>
+                <Link href="/login">Login</Link>
+              </Button>
+              <Button asChild variant="secondary">
+                <Link href="/signup">Sign Up</Link>
+              </Button>
             </div>
           </div>
         ) : (
@@ -191,13 +204,13 @@ export default function MoodboardPage() {
               </div>
 
               <div className="mb-4 flex items-center justify-between gap-2">
-                <button type="button" onClick={() => changeMonth(-1)} aria-label="Previous month" className="rounded-full border border-white/10 bg-slate-900 px-3 py-2 text-sm font-medium text-white transition hover:bg-slate-800">
+                <Button type="button" onClick={() => changeMonth(-1)} aria-label="Previous month" variant="secondary" size="icon">
                   ←
-                </button>
+                </Button>
                 <h3 className="text-center text-base font-semibold text-white sm:text-lg">{monthLabel}</h3>
-                <button type="button" onClick={() => changeMonth(1)} aria-label="Next month" className="rounded-full border border-white/10 bg-slate-900 px-3 py-2 text-sm font-medium text-white transition hover:bg-slate-800">
+                <Button type="button" onClick={() => changeMonth(1)} aria-label="Next month" variant="secondary" size="icon">
                   →
-                </button>
+                </Button>
               </div>
 
               <div className="grid grid-cols-7 gap-1 text-[10px] text-slate-400 sm:gap-3 sm:text-xs">
@@ -223,22 +236,21 @@ export default function MoodboardPage() {
                             <span className="text-xs font-semibold text-white sm:text-base">{cell.day}</span>
                             {entriesForDay.length > 0 && (
                               <>
-                                <span aria-label={getMoodBadgeText(highlightMood)} className={`h-2 w-2 shrink-0 rounded-full border sm:hidden ${badgeClass}`} />
+                                <span aria-label={getMoodBadgeText(highlightMood)} className={`inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full border px-1 text-[10px] font-semibold sm:hidden ${badgeClass}`}>
+                                  {entriesForDay.length}
+                                </span>
                                 <span className={`hidden items-center rounded-full border px-2 py-0.5 text-[11px] font-semibold sm:inline-flex ${badgeClass}`}>
-                                {getMoodBadgeText(highlightMood)}
+                                  {entriesForDay.length > 1 ? `${entriesForDay.length} moods` : getMoodBadgeText(highlightMood)}
                                 </span>
                               </>
                             )}
                           </div>
                           <div className="mt-2 hidden space-y-1 sm:block">
-                            {entriesForDay.slice(0, 2).map((entry) => (
-                              <div key={entry.date + entry.mood} className="rounded-2xl bg-white/5 px-2 py-1 text-[11px] text-slate-200">
+                            {entriesForDay.map((entry) => (
+                              <div key={entry._id ?? `${entry.date}-${entry.mood}-${entry.emotion}`} className="rounded-2xl bg-white/5 px-2 py-1 text-[11px] text-slate-200">
                                 {entry.mood}
                               </div>
                             ))}
-                            {entriesForDay.length > 2 && (
-                              <div className="text-[11px] text-slate-400">+{entriesForDay.length - 2} more</div>
-                            )}
                           </div>
                         </div>
                       ) : null}

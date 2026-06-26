@@ -17,11 +17,9 @@ export default function SupportSuccessPage() {
             This payment flow is currently marked as a test donation page. If
             you used Stripe test details, no real charge was made.
           </p>
-          <Link href="/">
-            <Button className="mt-6 rounded-full bg-purple-600 px-8 py-5 text-white hover:bg-pink-500">
-              Back to Lilly
-            </Button>
-          </Link>
+          <Button asChild className="mt-6">
+            <Link href="/">Back to Lilly</Link>
+          </Button>
         </div>
       </section>
 

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import Header from "../../_partials/header";
 import Footer from "../../_partials/footer";
+import { Button } from "@/components/ui/button";
 
 interface JournalEntry {
   _id: string;
@@ -52,9 +53,9 @@ export default function JournalEntryPage() {
     <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-950 via-violet-950 to-slate-950 text-white">
       <Header />
       <main className="mx-auto flex-1 w-full max-w-6xl px-6 pb-14 pt-24">
-        <Link href="/journal" className="inline-flex rounded-full border border-white/10 bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800">
-          ← Back to Journal
-        </Link>
+        <Button asChild variant="secondary" size="sm">
+          <Link href="/journal">← Back to Journal</Link>
+        </Button>
 
         {message ? (
           <div className="mt-8 rounded-3xl border border-white/10 bg-slate-950/80 p-8 text-slate-300">{message}</div>

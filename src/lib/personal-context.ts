@@ -21,6 +21,7 @@ interface RelevantJournal {
   content: string;
   date: string;
   score: number;
+  matchType: "semantic" | "recent";
 }
 
 interface UserContextDocument {
@@ -41,22 +42,41 @@ export async function getPersonalContext(userId: string, query: string) {
   }
 
   const journals = (user.journals || []) as StoredJournal[];
+  const recentJournalCandidates = journals
+    .filter((journal) => journal.content)
+    .sort((first, second) => new Date(second.createdAt || 0).getTime() - new Date(first.createdAt || 0).getTime())
+    .slice(0, 3);
   const journalsWithEmbeddings = journals
     .filter((journal) => journal.content && Array.isArray(journal.embedding) && journal.embedding.length > 0)
     .slice(-100);
 
   let relevantJournals: RelevantJournal[] = [];
   if (journalsWithEmbeddings.length > 0) {
-    const queryEmbedding = await getEmbedding(query);
-    relevantJournals = journalsWithEmbeddings
-      .map((journal) => ({
-        title: journal.title || "Untitled entry",
-        content: journal.content || "",
-        date: formatDate(journal.createdAt),
-        score: cosineSimilarity(queryEmbedding, journal.embedding || []),
-      }))
-      .sort((first, second) => second.score - first.score)
-      .slice(0, 3);
+    try {
+      const queryEmbedding = await getEmbedding(query);
+      relevantJournals = journalsWithEmbeddings
+        .map((journal) => ({
+          title: journal.title || "Untitled entry",
+          content: journal.content || "",
+          date: formatDate(journal.createdAt),
+          score: cosineSimilarity(queryEmbedding, journal.embedding || []),
+          matchType: "semantic" as const,
+        }))
+        .sort((first, second) => second.score - first.score)
+        .slice(0, 3);
+    } catch (error) {
+      console.error("Journal embedding lookup failed; using recent journals instead.", error);
+    }
+  }
+
+  if (relevantJournals.length === 0 && recentJournalCandidates.length > 0) {
+    relevantJournals = recentJournalCandidates.map((journal) => ({
+      title: journal.title || "Untitled entry",
+      content: journal.content || "",
+      date: formatDate(journal.createdAt),
+      score: 0,
+      matchType: "recent" as const,
+    }));
   }
 
   const sevenDaysAgo = new Date();
@@ -76,7 +96,7 @@ export function buildPersonalContextBlock(
 
   if (relevantJournals.length > 0) {
     const journals = relevantJournals.map((entry, index) => (
-      `${index + 1}. [${entry.date}] ${entry.title}\n   "${entry.content.slice(0, 600)}"`
+      `${index + 1}. [${entry.date}] ${entry.title} (${entry.matchType} context)\n   "${entry.content.slice(0, 600)}"`
     ));
     sections.push(`RELEVANT PRIVATE JOURNAL ENTRIES:\n${journals.join("\n\n")}`);
   }

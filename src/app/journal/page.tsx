@@ -124,9 +124,9 @@ export default function JournalPage() {
       <div>
   <h1 className="text-3xl font-bold">Journal</h1>
   <p className="text-sm text-slate-400">Capture your thoughts and feelings anytime.</p>
-  <Link href="/chat" className="inline-block mt-3 rounded-full bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-fuchsia-500 transition">
-    Back to Chat
-  </Link>
+  <Button asChild size="sm" className="mt-3">
+    <Link href="/chat">Back to Chat</Link>
+  </Button>
   </div>
 </div>
         {message && (
@@ -140,12 +140,12 @@ export default function JournalPage() {
               You should be logged in to write journals and use the mood tracker.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link href="/login" className="inline-flex items-center justify-center rounded-full bg-fuchsia-500 px-6 py-3 text-sm font-semibold text-white hover:bg-fuchsia-400 transition">
-                Login
-              </Link>
-              <Link href="/signup" className="inline-flex items-center justify-center rounded-full border border-white/10 bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-800 transition">
-                Sign Up
-              </Link>
+              <Button asChild>
+                <Link href="/login">Login</Link>
+              </Button>
+              <Button asChild variant="secondary">
+                <Link href="/signup">Sign Up</Link>
+              </Button>
             </div>
           </div>
         ) : (
@@ -170,7 +170,7 @@ export default function JournalPage() {
                   placeholder="Write about how you feel today..."
                 />
               </div>
-              <Button type="submit" className="bg-purple-600 hover:bg-fuchsia-500 text-white rounded-full px-6 py-3">
+              <Button type="submit" disabled={isSaving}>
                 {isSaving ? "Saving..." : "Save Journal"}
               </Button>
             </form>

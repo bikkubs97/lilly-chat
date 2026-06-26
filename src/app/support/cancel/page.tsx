@@ -18,16 +18,12 @@ export default function SupportCancelPage() {
             donation checkout again whenever you like.
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <Link href="/">
-              <Button className="rounded-full bg-purple-600 px-8 py-5 text-white hover:bg-pink-500">
-                Back to Lilly
-              </Button>
-            </Link>
-            <Link href="/#support-lilly">
-              <Button className="rounded-full bg-slate-800 px-8 py-5 text-white hover:bg-slate-700">
-                Try again
-              </Button>
-            </Link>
+            <Button asChild>
+              <Link href="/">Back to Lilly</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/#support-lilly">Try again</Link>
+            </Button>
           </div>
         </div>
       </section>

@@ -172,7 +172,7 @@ export default function MoodboardPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-violet-950 to-slate-950 text-white flex flex-col">
       <Header />
 
-      <main className="flex-1 max-w-6xl mx-auto px-4 py-24 sm:px-6">
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-24 sm:px-8">
         <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <h1 className="text-4xl font-bold tracking-tight">{nickname}&apos;s Moodboard</h1>
@@ -206,7 +206,7 @@ export default function MoodboardPage() {
           </ScrollReveal>
         ) : (
           <>
-            <ScrollReveal className="mb-10 overflow-hidden rounded-4xl border border-white/10 bg-slate-950/80 p-3 shadow-xl shadow-black/20 sm:p-6">
+            <section className="mb-10 overflow-hidden rounded-4xl border border-white/10 bg-slate-950/80 p-3 shadow-xl shadow-black/20 sm:p-6">
               <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h2 className="text-2xl font-semibold">Mood Calendar</h2>
@@ -230,56 +230,58 @@ export default function MoodboardPage() {
                 </Button>
               </div>
 
-              <div className="grid grid-cols-7 gap-1 text-[10px] text-slate-400 sm:gap-3 sm:text-xs">
-                {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map((weekday) => (
-                  <div key={weekday} className="text-center font-medium">{weekday}</div>
-                ))}
-              </div>
+              <div className="w-full overflow-hidden">
+                <div className="grid grid-cols-7 gap-1 text-[10px] text-slate-400 sm:gap-3 sm:text-xs">
+                  {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map((weekday) => (
+                    <div key={weekday} className="text-center font-medium overflow-hidden">{weekday}</div>
+                  ))}
+                </div>
 
-              <div className="mt-1 grid grid-cols-7 gap-1 sm:mt-3 sm:gap-3">
-                {monthDays.map((cell, index) => {
-                  const entriesForDay = cell.dateKey ? calendarMap[cell.dateKey] || [] : [];
-                  const highlightMood = entriesForDay[0]?.mood || "";
-                  const badgeClass = cell.dateKey ? getMoodClass(highlightMood) : "bg-transparent";
+                <div className="mt-1 grid grid-cols-7 gap-1 sm:mt-3 sm:gap-3">
+                  {monthDays.map((cell, index) => {
+                    const entriesForDay = cell.dateKey ? calendarMap[cell.dateKey] || [] : [];
+                    const highlightMood = entriesForDay[0]?.mood || "";
+                    const badgeClass = cell.dateKey ? getMoodClass(highlightMood) : "bg-transparent";
 
-                  return (
-                    <div
-                      key={`${cell.dateKey ?? 'empty'}-${index}`}
-                      className={`min-w-0 min-h-[52px] rounded-xl border border-white/10 p-1 text-sm sm:min-h-[82px] sm:rounded-3xl sm:p-3 ${cell.day ? "bg-slate-900/80" : "bg-transparent"}`}
-                    >
-                      {cell.day ? (
-                        <div className="flex h-full flex-col justify-between">
-                          <div className="flex items-center justify-between gap-1">
-                            <span className="text-xs font-semibold text-white sm:text-base">{cell.day}</span>
-                            {entriesForDay.length > 0 && (
-                              <>
-                                <span aria-label={getMoodBadgeText(highlightMood)} className={`inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full border px-1 text-[10px] font-semibold sm:hidden ${badgeClass}`}>
-                                  {entriesForDay.length}
-                                </span>
-                                <span className={`hidden items-center rounded-full border px-2 py-0.5 text-[11px] font-semibold sm:inline-flex ${badgeClass}`}>
-                                  {entriesForDay.length > 1 ? `${entriesForDay.length} moods` : getMoodBadgeText(highlightMood)}
-                                </span>
-                              </>
-                            )}
+                    return (
+                      <div
+                        key={`${cell.dateKey ?? 'empty'}-${index}`}
+                        className={`w-full min-w-0 h-[52px] sm:h-[120px] overflow-hidden rounded-xl border p-1 text-sm sm:rounded-2xl sm:p-3 ${cell.day ? "bg-slate-900/80 border-white/10" : "bg-transparent border-transparent"}`}
+                      >
+                        {cell.day ? (
+                          <div className="flex h-full w-full min-w-0 flex-col justify-between overflow-hidden">
+                            <div className="flex w-full min-w-0 items-center justify-between gap-1 overflow-hidden">
+                              <span className="shrink-0 text-xs font-semibold text-white sm:text-base">{cell.day}</span>
+                              {entriesForDay.length > 0 && (
+                                <>
+                                  <span aria-label={getMoodBadgeText(highlightMood)} className={`inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-[10px] font-semibold sm:hidden ${badgeClass}`}>
+                                    {entriesForDay.length}
+                                  </span>
+                                  <span className={`hidden min-w-0 max-w-full truncate items-center rounded-full border px-2 py-0.5 text-[11px] font-semibold sm:inline-flex ${badgeClass}`}>
+                                    {entriesForDay.length > 1 ? `${entriesForDay.length} moods` : getMoodBadgeText(highlightMood)}
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                            <div className="mt-1 hidden space-y-1 sm:block overflow-hidden">
+                              {entriesForDay.slice(0, 2).map((entry) => (
+                                <div key={entry._id ?? `${entry.date}-${entry.mood}-${entry.emotion}`} className="w-full truncate rounded-xl bg-white/5 px-2 py-1 text-[11px] text-slate-200">
+                                  {entry.mood}
+                                </div>
+                              ))}
+                            </div>
                           </div>
-                          <div className="mt-2 hidden space-y-1 sm:block">
-                            {entriesForDay.map((entry) => (
-                              <div key={entry._id ?? `${entry.date}-${entry.mood}-${entry.emotion}`} className="rounded-2xl bg-white/5 px-2 py-1 text-[11px] text-slate-200">
-                                {entry.mood}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      ) : null}
-                    </div>
-                  );
-                })}
+                        ) : null}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </ScrollReveal>
+            </section>
 
             <section className="space-y-4">
               {entries.length === 0 ? (
-                <ScrollReveal className="rounded-3xl border border-white/10 bg-slate-950/80 p-8 text-slate-300">
+                <ScrollReveal className="rounded-3xl border border-white/10 bg-slate-950/80 p-8 text-slate-300 w-full">
                   No moodboard entries yet. End a chat session to save your mood.
                 </ScrollReveal>
               ) : (

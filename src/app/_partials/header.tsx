@@ -24,7 +24,7 @@ export default function Header() {
     }
 
     function desktopLinkClass(href: string) {
-        return `rounded-full px-3 py-2 transition-colors duration-200 ${
+        return `rounded-full px-3 py-2 transition-[background-color,color,box-shadow] duration-200 ${
             isActive(href)
                 ? "bg-fuchsia-400/15 text-white ring-1 ring-fuchsia-300/40"
                 : "text-slate-200 hover:bg-white/5 hover:text-white"
@@ -32,7 +32,7 @@ export default function Header() {
     }
 
     function desktopActionClass(href: string) {
-        return `inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-semibold text-white shadow-md shadow-purple-500/20 transition-all duration-200 ${
+        return `inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-semibold text-white shadow-md shadow-purple-500/20 transition-[transform,background-color,box-shadow] duration-200 active:scale-[0.97] ${
             isActive(href) ? "bg-fuchsia-500" : "bg-purple-600 hover:-translate-y-0.5 hover:bg-fuchsia-500 hover:shadow-lg hover:shadow-fuchsia-500/20"
         }`;
     }
@@ -109,13 +109,13 @@ export default function Header() {
     }
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 w-full bg-slate-950/60 backdrop-blur-3xl shadow-black/10 shadow-sm backdrop-saturate-150">
-            <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+        <header className="fixed top-0 left-0 right-0 z-50 w-full border-b border-white/[0.06] bg-slate-950/55 backdrop-blur-2xl shadow-sm shadow-black/10 backdrop-saturate-150">
+            <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
                 {/* Logo */}
                 <Link href={'/'}>
                     <div className="flex items-center gap-2">
                         <HeartHandshake className="w-6 h-6 text-fuchsia-400" />
-                        <h1 className="text-xl font-bold tracking-tight text-white">Lilly.live</h1>
+                        <h1 className="text-xl font-bold tracking-[-0.03em] text-white">Lilly.live</h1>
                     </div>
                 </Link>
                 {/* Desktop Nav */}
@@ -168,7 +168,7 @@ export default function Header() {
                 </div>
             </div>
 {menuOpen && (
-    <div className="md:hidden px-6 py-4 bg-slate-950/95 backdrop-blur-xl border-t border-white/10 shadow-2xl shadow-black/20 space-y-4">
+    <div className="glass-surface-strong md:hidden space-y-4 border-x-0 px-6 py-4 shadow-2xl shadow-black/20">
         <Link
             href="/"
             onClick={toggleMenu}

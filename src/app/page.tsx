@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Heart, Zap } from "lucide-react";
+import { ArrowRight, Heart, HeartHandshake, LockKeyhole, MessageCircle, Zap } from "lucide-react";
 import { FlipWords } from "@/components/ui/shadcn-io/flip-words";
 import { GradientText } from "@/components/ui/shadcn-io/gradient-text";
 import Header from "./_partials/header";
@@ -20,33 +20,33 @@ export default function Homepage() {
   }, []);
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-950 via-violet-950 to-slate-950 text-white">
+    <main className="app-background relative min-h-screen overflow-hidden text-white">
       <Header />
 
       {/* Hero Section */}
-      <section className="relative max-w-7xl mx-auto px-6 pt-36 pb-28 flex flex-col items-center text-center space-y-8">
+      <section className="relative mx-auto flex max-w-6xl flex-col items-center space-y-7 px-6 pb-24 pt-32 text-center sm:pt-36">
         {/* Decorative Background Glow */}
         <div className="absolute inset-0 -z-20 overflow-hidden">
-          <div className="absolute left-1/2 top-16 -translate-x-1/2 w-[28rem] h-[28rem] bg-gradient-to-tr from-pink-400/40 via-purple-400/30 to-blue-400/20 blur-3xl rounded-full animate-pulse" />
-          <div className="absolute -left-16 top-24 w-72 h-72 rounded-full bg-fuchsia-500/10 blur-3xl" />
-          <div className="absolute right-0 top-36 w-60 h-60 rounded-full bg-violet-500/15 blur-3xl" />
-          <div className="absolute left-10 bottom-8 h-28 w-28 rounded-full border border-white/10" />
-          <div className="absolute right-20 bottom-20 h-32 w-32 rounded-full border border-fuchsia-300/20" />
+          <div className="absolute left-1/2 top-16 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-violet-400/20 blur-3xl" />
+          <div className="absolute -left-16 top-24 h-72 w-72 rounded-full bg-fuchsia-500/8 blur-3xl" />
+          <div className="absolute right-0 top-36 h-60 w-60 rounded-full bg-violet-500/10 blur-3xl" />
         </div>
 
-        {/* Animated hero illustration */}
-        <LillyNeuralNetwork />
+        <span className="eyebrow"><LockKeyhole className="mr-2 size-3.5" />A private space to check in</span>
+
+        <div className="flex size-14 items-center justify-center rounded-2xl border border-fuchsia-200/15 bg-fuchsia-400/10 shadow-lg shadow-fuchsia-950/20">
+          <HeartHandshake className="size-7 text-fuchsia-300" aria-hidden="true" />
+        </div>
 
         {/* Title */}
-        <h1 className="text-5xl md:text-6xl font-extrabold leading-tight">
+        <h1 className="max-w-3xl text-5xl font-bold leading-[1.03] tracking-[-0.045em] sm:text-6xl md:text-7xl">
           <GradientText
             text="Meet Lilly"
             gradient="linear-gradient(90deg, #3b82f6 0%, #a855f7 50%, #ec4899 100%)"
           />
         </h1>
 
-        {/* Flipping Words */}
-        <p className="text-2xl md:text-3xl font-medium text-white">
+        <p className="text-xl font-medium tracking-[-0.02em] text-white sm:text-2xl">
           Lilly is{" "}
           <FlipWords
             words={["Safe", "Secure", "Friendly", "Anonymous", "Understanding"]}
@@ -55,86 +55,84 @@ export default function Homepage() {
             wordDelay={0.1}
           />
         </p>
-        <p className="font-bold text-purple-400">
-          <span className="text-fuchsia-300">Y</span>our{" "}
-          <span className="text-fuchsia-300">L</span>oyal{" "}
-          <span className="text-fuchsia-300">L</span>oving{" "}
-          <span className="text-fuchsia-300">I</span>ntelligent{" "}
-          <span className="text-fuchsia-300">L</span>istener
-        </p>
-
-        <p className="text-lg text-slate-300 max-w-2xl mx-auto">
+        <p className="max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
           Chat with empathy, journal your thoughts, and track your emotional journey—all in one safe space. You don&apos;t have to create an account to start chatting.
         </p>
 
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Button asChild size="lg" className="px-10">
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Button asChild size="lg" className="px-8">
             <Link href="/chat">
               <MessageCircle />
-              Chat Now
+              Start a conversation <ArrowRight />
             </Link>
           </Button>
           {!isLoggedIn && (
-            <Button asChild size="lg" variant="outline" className="px-10">
+          <Button asChild size="lg" variant="outline" className="px-8">
               <Link href="/signup">
                 Sign Up
               </Link>
             </Button>
           )}
         </div>
+        <p className="text-sm text-slate-400">Here whenever you need a moment to reflect.</p>
+
+        <div className="pointer-events-none absolute -bottom-10 -z-10 w-full max-w-3xl opacity-80 sm:block">
+          <LillyNeuralNetwork />
+        </div>
       </section>
 
       {/* Why Lilly Section */}
-      <section className="max-w-6xl mx-auto px-6 py-20 relative z-10 h-full">
+      <section className="relative z-10 mx-auto max-w-6xl px-6 py-20">
         <div className="space-y-10">
           <div className="text-center">
-            <h3 className="text-3xl font-bold mb-4 text-white">Why Lilly?</h3>
-            <p className="mx-auto max-w-3xl text-sm sm:text-base text-slate-300">
+            <span className="eyebrow">Made for the everyday</span>
+            <h3 className="mt-4 text-3xl font-bold leading-tight tracking-[-0.03em] text-white sm:text-4xl">Support that meets you where you are.</h3>
+            <p className="mx-auto mt-4 max-w-3xl text-sm leading-6 text-slate-300 sm:text-base">
               Lilly is built to be your quiet companion for emotional support, self-reflection, and personal growth.
               It blends empathetic chat support with private journaling and intelligent mood tracking so you can
               understand yourself better over time.
             </p>
           </div>
 
-          <div className="grid gap-8 lg:grid-cols-3">
-            <ScrollReveal className="rounded-3xl border border-purple-600/60 bg-slate-950/80 p-8 text-center shadow-[0_0_20px_rgba(147,51,234,0.3),0_20px_60px_rgba(15,23,42,0.35)] backdrop-blur-xl transition-[border-color,box-shadow] duration-300 hover:border-purple-500 hover:shadow-[0_0_30px_rgba(147,51,234,0.5),0_20px_60px_rgba(15,23,42,0.45)]">
-              <div className="flex items-center justify-center mb-5">
-                <MessageCircle className="w-10 h-10 text-fuchsia-300" />
+          <div className="grid gap-5 lg:grid-cols-3">
+            <ScrollReveal className="glass-surface rounded-3xl p-7 text-left transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-1 hover:border-fuchsia-300/30 hover:shadow-xl hover:shadow-violet-950/30">
+              <div className="mb-5 flex size-11 items-center justify-center rounded-2xl bg-fuchsia-400/10 ring-1 ring-inset ring-fuchsia-200/15">
+                <MessageCircle className="size-5 text-fuchsia-200" />
               </div>
-              <h4 className="text-xl font-semibold text-white mb-3">Warm Chat Support</h4>
-              <p className="text-sm text-slate-300 leading-relaxed">
+              <h4 className="mb-2 text-xl font-semibold tracking-[-0.02em] text-white">Warm Chat Support</h4>
+              <p className="text-sm leading-6 text-slate-300">
                 Speak with Lilly anytime, day or night. The chat is designed to feel supportive, nonjudgmental,
                 and easy to use—whether you need a quick check-in, a safe place to vent, or helpful emotional guidance.
               </p>
             </ScrollReveal>
 
-            <ScrollReveal delay={0.08} className="rounded-3xl border border-purple-600/60 bg-slate-950/80 p-8 text-center shadow-[0_0_20px_rgba(147,51,234,0.3),0_20px_60px_rgba(15,23,42,0.35)] backdrop-blur-xl transition-[border-color,box-shadow] duration-300 hover:border-purple-500 hover:shadow-[0_0_30px_rgba(147,51,234,0.5),0_20px_60px_rgba(15,23,42,0.45)]">
-              <div className="flex items-center justify-center mb-5">
-                <Heart className="w-10 h-10 text-fuchsia-300" />
+            <ScrollReveal delay={0.08} className="glass-surface rounded-3xl p-7 text-left transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-1 hover:border-fuchsia-300/30 hover:shadow-xl hover:shadow-violet-950/30">
+              <div className="mb-5 flex size-11 items-center justify-center rounded-2xl bg-fuchsia-400/10 ring-1 ring-inset ring-fuchsia-200/15">
+                <Heart className="size-5 text-fuchsia-200" />
               </div>
-              <h4 className="text-xl font-semibold text-white mb-3">Private Journals</h4>
-              <p className="text-sm text-slate-300 leading-relaxed">
+              <h4 className="mb-2 text-xl font-semibold tracking-[-0.02em] text-white">Private Journals</h4>
+              <p className="text-sm leading-6 text-slate-300">
                 Capture your thoughts, track moments of growth, and revisit your feelings over time.
                 Lilly&apos;s journal keeps your entries secure while helping you notice patterns and progress.
               </p>
             </ScrollReveal>
 
-            <ScrollReveal delay={0.16} className="rounded-3xl border border-purple-600/60 bg-slate-950/80 p-8 text-center shadow-[0_0_20px_rgba(147,51,234,0.3),0_20px_60px_rgba(15,23,42,0.35)] backdrop-blur-xl transition-[border-color,box-shadow] duration-300 hover:border-purple-500 hover:shadow-[0_0_30px_rgba(147,51,234,0.5),0_20px_60px_rgba(15,23,42,0.45)]">
-              <div className="flex items-center justify-center mb-5">
-                <Zap className="w-10 h-10 text-fuchsia-300" />
+            <ScrollReveal delay={0.16} className="glass-surface rounded-3xl p-7 text-left transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-1 hover:border-fuchsia-300/30 hover:shadow-xl hover:shadow-violet-950/30">
+              <div className="mb-5 flex size-11 items-center justify-center rounded-2xl bg-fuchsia-400/10 ring-1 ring-inset ring-fuchsia-200/15">
+                <Zap className="size-5 text-fuchsia-200" />
               </div>
-              <h4 className="text-xl font-semibold text-white mb-3">Mood Tracking</h4>
-              <p className="text-sm text-slate-300 leading-relaxed">
+              <h4 className="mb-2 text-xl font-semibold tracking-[-0.02em] text-white">Mood Tracking</h4>
+              <p className="text-sm leading-6 text-slate-300">
                 Log how you feel after each chat session and watch your moodboard grow.
                 The mood tracker turns your emotions into a visual calendar so you can understand trends and gain insight.
               </p>
             </ScrollReveal>
           </div>
 
-          <ScrollReveal className="rounded-3xl border border-purple-600/60 bg-slate-950/80 p-8 text-center shadow-[0_0_20px_rgba(147,51,234,0.3),0_20px_60px_rgba(15,23,42,0.35)] backdrop-blur-xl transition-[border-color,box-shadow] duration-300 hover:border-purple-500 hover:shadow-[0_0_30px_rgba(147,51,234,0.5),0_20px_60px_rgba(15,23,42,0.45)]">
-            <h4 className="text-xl font-semibold text-white mb-3">Everything Connected</h4>
-            <p className="text-sm text-slate-300 leading-relaxed">
+          <ScrollReveal className="glass-surface-strong rounded-3xl p-8 text-center sm:p-10">
+            <h4 className="mb-3 text-xl font-semibold tracking-[-0.02em] text-white">Everything Connected</h4>
+            <p className="mx-auto max-w-3xl text-sm leading-6 text-slate-300">
               Lilly brings together caring conversation, daily reflection, and mood analysis in one place. Your journal entries
               and moodboard work alongside the chat so you can feel supported today while building a clearer emotional picture
               for tomorrow.

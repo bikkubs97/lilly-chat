@@ -37,8 +37,9 @@ function createTransporter() {
   if (!isSmtpConfigured()) {
     throw new Error("SMTP_USER and SMTP_PASS are required to send email.");
   }
-
+   
   return nodemailer.createTransport({
+
     host: process.env.SMTP_HOST || "smtp.gmail.com",
     port: getSmtpPort(),
     secure: getSmtpSecure(),

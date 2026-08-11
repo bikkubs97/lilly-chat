@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Send } from "lucide-react";
+import { LockKeyhole, Send } from "lucide-react";
 import Header from "../_partials/header";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -144,21 +144,21 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-950 via-violet-950 to-slate-950 text-slate-100 pt-28">
+    <div className="app-background flex min-h-screen flex-col pt-24 text-slate-100">
       <Header />
 
      
 
-      <div className="flex-1 overflow-y-auto px-6 py-6 pb-24">
-        <div className="mx-auto w-full max-w-7xl">
+      <div className="flex-1 overflow-y-auto px-4 py-6 pb-32 sm:px-6">
+        <div className="mx-auto w-full max-w-4xl">
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)]">
-            <section className="space-y-6">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <section className="space-y-5">
+            <div className="glass-surface flex flex-col gap-3 rounded-3xl p-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex flex-wrap items-center gap-3">
-                <span className="rounded-full bg-slate-900/80 px-4 py-2 text-sm font-medium text-white">
+                <span className="rounded-full bg-white/8 px-4 py-2 text-sm font-semibold text-white">
                   Chat with Lilly
                 </span>
-                <span className="text-sm text-slate-400">Track your mood after each session.</span>
+                <span className="inline-flex items-center gap-1.5 text-sm text-slate-300"><LockKeyhole className="size-3.5 text-fuchsia-200" />Your conversation stays private.</span>
                 {contextStatus && (
                   <span className="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1 text-xs text-emerald-200">
                     {contextStatus}
@@ -172,10 +172,10 @@ export default function ChatPage() {
 
               return (
                 <div key={index} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                  <div className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm ${
+                  <div className={`max-w-[85%] rounded-3xl px-4 py-3 text-sm leading-6 sm:max-w-[75%] ${
                     msg.role === "user"
-                      ? "bg-purple-700 text-white rounded-br-none shadow-purple-500/20 shadow-lg"
-                      : "bg-slate-800 text-slate-100 rounded-bl-none shadow-black/20 shadow-sm"
+                      ? "rounded-br-md bg-gradient-to-br from-violet-500 to-violet-700 text-white shadow-lg shadow-violet-950/30"
+                      : "glass-surface rounded-bl-md text-slate-100"
                   }`}>
                     {msg.role === "assistant" ? (
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -190,8 +190,8 @@ export default function ChatPage() {
             })}
 
             {isThinking && (
-              <div className="flex items-center space-x-2 text-gray-400">
-                <div className="px-4 py-2 bg-gray-800 rounded-2xl shadow-sm rounded-bl-none flex items-center">
+              <div className="flex items-center space-x-2 text-slate-400">
+                <div className="glass-surface flex rounded-2xl rounded-bl-none px-4 py-2 shadow-sm">
                   <span className="flex space-x-1">
                     <span className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" />
                     <span className="w-2 h-2 bg-purple-500 rounded-full animate-bounce delay-150" />
@@ -208,23 +208,26 @@ export default function ChatPage() {
         </div>
       </div>
 
-      <div className="w-full fixed bottom-0 px-4  md:px-28 border-t border-purple-800 bg-slate-950/90 backdrop-blur-md py-4 flex items-center gap-3">
+      <div className="fixed bottom-0 left-0 right-0 z-20 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:px-6">
+        <div className="glass-surface-strong mx-auto flex max-w-4xl items-end gap-3 rounded-3xl p-2">
         <textarea
           ref={inputRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyPress}
-          placeholder="Type your message..."
-          className="flex-1 resize-none border border-purple-700 rounded-xl px-4 pt-2 bg-slate-900 text-slate-100 focus:outline-none focus:ring-2 focus:ring-fuchsia-400 min-h-[44px] max-h-[150px]"
+          placeholder="Share what’s on your mind…"
+          className="min-h-[48px] max-h-[150px] flex-1 resize-none rounded-2xl border border-white/10 bg-slate-950/45 px-4 py-3 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-300/80"
         />
         <Button
           onClick={handleSendMessage}
           disabled={!input.trim() || isThinking}
           aria-label="Send message"
           size="icon"
+          className="self-center"
         >
           <Send size={22} />
         </Button>
+        </div>
       </div>
     </div>
   );

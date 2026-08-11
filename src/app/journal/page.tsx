@@ -118,7 +118,7 @@ export default function JournalPage() {
   const journalsHeading = nickname === "Your" ? "Your Journals" : `${nickname}${nickname.endsWith("s") ? "'" : "'s"} Journals`;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-violet-950 to-slate-950 text-white flex flex-col">
+    <div className="app-background flex min-h-screen flex-col text-white">
       <Header />
       <main className="mx-auto flex-1 w-full max-w-7xl px-6 pb-14 pt-24">
         <div className="flex items-center justify-between gap-4 mb-8">
@@ -135,7 +135,7 @@ export default function JournalPage() {
         )}
 
         {isAuthenticated === false ? (
-          <ScrollReveal className="rounded-3xl border border-purple-700/30 bg-slate-950/80 p-10 text-center shadow-lg shadow-black/20">
+          <ScrollReveal className="glass-surface-strong rounded-3xl p-10 text-center">
             <h2 className="text-3xl font-semibold text-white mb-4">Login required</h2>
             <p className="mx-auto max-w-xl text-sm text-slate-300 mb-8">
               You should be logged in to write journals and use the mood tracker.
@@ -152,7 +152,7 @@ export default function JournalPage() {
         ) : (
           <>
             <ScrollReveal className="mt-8 mb-10">
-              <form onSubmit={handleSubmit} className="rounded-3xl bg-slate-950/80 border border-purple-700 p-6 shadow-lg shadow-black/20">
+              <form onSubmit={handleSubmit} className="glass-surface-strong rounded-3xl p-6">
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-slate-200 mb-2">Title</label>
                   <input
@@ -181,7 +181,7 @@ export default function JournalPage() {
             <section className="space-y-4">
               <h2 className="text-2xl font-semibold text-white">{journalsHeading}</h2>
               {entries.length === 0 ? (
-                <ScrollReveal className="rounded-3xl border border-white/10 bg-slate-950/80 p-8 text-slate-300">
+                <ScrollReveal className="glass-surface rounded-3xl p-8 text-slate-300">
                   No journal entries yet. Use the form above to add your first note.
                 </ScrollReveal>
               ) : (
@@ -189,7 +189,7 @@ export default function JournalPage() {
                   <ScrollReveal key={entry._id ?? entry.title} delay={Math.min(index, 4) * 0.05}>
                     <Link
                       href={`/journal/${entry._id}`}
-                      className="block rounded-3xl border border-purple-700/30 bg-slate-950/80 p-6 shadow-lg shadow-black/20 transition-colors duration-300 hover:border-fuchsia-400/70 hover:bg-slate-900/90 focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
+                      className="glass-surface block rounded-3xl p-6 transition-[border-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-fuchsia-300/50 hover:shadow-lg hover:shadow-black/20 focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
                     >
                       <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                         <h2 className="min-w-0 break-words text-xl font-semibold text-white">{entry.title}</h2>

@@ -9,6 +9,12 @@ body{
   font-optical-sizing: auto;
   font-style: normal;
   background:black;
+  letter-spacing: -0.01em;
+}
+
+::selection {
+  color: #fff;
+  background: rgb(168 85 247 / 0.7);
 }
 
 html {
@@ -213,6 +219,24 @@ html {
   .eyebrow {
     @apply inline-flex items-center rounded-full border border-fuchsia-200/15 bg-white/5 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-fuchsia-100/90;
   }
+
+  .page-background {
+    background:
+      radial-gradient(circle at 8% 0%, rgb(168 85 247 / 0.12), transparent 28rem),
+      radial-gradient(circle at 92% 32%, rgb(56 189 248 / 0.07), transparent 24rem),
+      linear-gradient(150deg, #080b18 0%, #0d1022 52%, #080b18 100%);
+  }
+
+  .content-card {
+    background: rgb(15 23 42 / 0.68);
+    border: 1px solid rgb(255 255 255 / 0.11);
+    box-shadow: 0 24px 70px rgb(2 6 23 / 0.28), inset 0 1px rgb(255 255 255 / 0.06);
+    backdrop-filter: blur(24px) saturate(135%);
+  }
+
+  .form-control {
+    @apply w-full rounded-2xl border border-white/10 bg-slate-950/55 px-4 py-3 text-sm text-white shadow-inner shadow-black/10 outline-none transition-colors placeholder:text-slate-500 focus:border-fuchsia-300/70 focus:ring-4 focus:ring-fuchsia-300/10;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -225,14 +249,14 @@ html {
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  .glass-surface, .glass-surface-strong {
+  .glass-surface, .glass-surface-strong, .content-card {
     background: #111827;
     backdrop-filter: none;
   }
 }
 
 @media (prefers-contrast: more) {
-  .glass-surface, .glass-surface-strong {
+  .glass-surface, .glass-surface-strong, .content-card {
     border-color: rgb(255 255 255 / 0.48);
   }
 }

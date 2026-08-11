@@ -61,7 +61,7 @@ function LoginPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-950 via-violet-950 to-slate-950 text-white mt-10">
+    <div className="app-background flex min-h-screen flex-col text-white">
       <Header />
 
       <main className="flex-1 flex items-center justify-center px-4 py-12">

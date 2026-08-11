@@ -189,7 +189,7 @@ export default function JournalPage() {
                   <ScrollReveal key={entry._id ?? entry.title} delay={Math.min(index, 4) * 0.05}>
                     <Link
                       href={`/journal/${entry._id}`}
-                      className="glass-surface block rounded-3xl p-6 transition-[border-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-fuchsia-300/50 hover:shadow-lg hover:shadow-black/20 focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
+                      className="glass-surface block rounded-3xl p-6 focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
                     >
                       <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                         <h2 className="min-w-0 break-words text-xl font-semibold text-white">{entry.title}</h2>

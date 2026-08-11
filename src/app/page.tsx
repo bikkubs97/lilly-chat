@@ -96,7 +96,7 @@ export default function Homepage() {
           </div>
 
           <div className="grid gap-5 lg:grid-cols-3">
-            <ScrollReveal className="glass-surface rounded-3xl p-7 text-left transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-1 hover:border-fuchsia-300/30 hover:shadow-xl hover:shadow-violet-950/30">
+            <ScrollReveal className="glass-surface rounded-3xl p-7 text-left">
               <div className="mb-5 flex size-11 items-center justify-center rounded-2xl bg-fuchsia-400/10 ring-1 ring-inset ring-fuchsia-200/15">
                 <MessageCircle className="size-5 text-fuchsia-200" />
               </div>
@@ -107,7 +107,7 @@ export default function Homepage() {
               </p>
             </ScrollReveal>
 
-            <ScrollReveal delay={0.08} className="glass-surface rounded-3xl p-7 text-left transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-1 hover:border-fuchsia-300/30 hover:shadow-xl hover:shadow-violet-950/30">
+            <ScrollReveal delay={0.08} className="glass-surface rounded-3xl p-7 text-left">
               <div className="mb-5 flex size-11 items-center justify-center rounded-2xl bg-fuchsia-400/10 ring-1 ring-inset ring-fuchsia-200/15">
                 <Heart className="size-5 text-fuchsia-200" />
               </div>
@@ -118,7 +118,7 @@ export default function Homepage() {
               </p>
             </ScrollReveal>
 
-            <ScrollReveal delay={0.16} className="glass-surface rounded-3xl p-7 text-left transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-1 hover:border-fuchsia-300/30 hover:shadow-xl hover:shadow-violet-950/30">
+            <ScrollReveal delay={0.16} className="glass-surface rounded-3xl p-7 text-left">
               <div className="mb-5 flex size-11 items-center justify-center rounded-2xl bg-fuchsia-400/10 ring-1 ring-inset ring-fuchsia-200/15">
                 <Zap className="size-5 text-fuchsia-200" />
               </div>

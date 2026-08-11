@@ -39,14 +39,14 @@ export default function Header() {
 
     function mobileLinkClass(href: string, variant: "quiet" | "action" = "quiet") {
         if (isActive(href)) {
-            return "block rounded-full border border-fuchsia-300/50 bg-fuchsia-400/20 px-5 py-3 text-center font-semibold text-white transition-colors duration-200";
+            return "block rounded-xl border border-fuchsia-300/50 bg-fuchsia-400/20 px-5 py-3 text-center font-semibold text-white transition-colors duration-200";
         }
 
         if (variant === "action") {
-            return "block rounded-full bg-purple-600 px-5 py-3 text-center font-semibold text-white shadow-md shadow-purple-500/20 transition-all duration-200 hover:bg-fuchsia-500";
+            return "block rounded-xl border border-purple-400/50 bg-purple-600 px-5 py-3 text-center font-semibold text-white shadow-md shadow-purple-500/20 transition-colors duration-200 hover:bg-fuchsia-500";
         }
 
-        return "block rounded-full border border-white/10 bg-slate-900/90 px-5 py-3 text-center font-semibold text-white transition-colors duration-200 hover:border-fuchsia-300/40 hover:bg-slate-800";
+        return "block rounded-xl border border-white/10 bg-slate-900/90 px-5 py-3 text-center font-semibold text-white transition-colors duration-200 hover:border-fuchsia-300/40 hover:bg-slate-800";
     }
 
     function toggleMenu() {
@@ -179,7 +179,7 @@ export default function Header() {
         <Link
             href="/chat"
             onClick={toggleMenu}
-            className={mobileLinkClass("/chat", "action")}
+            className={mobileLinkClass("/chat")}
         >
             Chat
         </Link>
@@ -209,7 +209,7 @@ export default function Header() {
 
         {nickname ? (
             <>
-                <div className="rounded-3xl bg-slate-900/90 px-4 py-3 text-center text-sm font-medium text-white">
+                <div className="rounded-xl border border-white/10 bg-slate-900/90 px-4 py-3 text-center text-sm font-medium text-white">
                     Hi {nickname}
                 </div>
                 <Button
@@ -217,7 +217,7 @@ export default function Header() {
                         handleLogout();
                         toggleMenu();
                     }}
-                    className="w-full"
+                    className="w-full rounded-xl"
                 >
                     Logout
                 </Button>

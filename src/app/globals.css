@@ -194,6 +194,25 @@ html {
   }
 }
 
+@keyframes voiceWave {
+  0%, 100% {
+    transform: translateY(3px) scaleY(0.18);
+    opacity: 0.35;
+  }
+  25% {
+    transform: translateY(-1px) scaleY(0.7);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-3px) scaleY(1);
+    opacity: 1;
+  }
+  75% {
+    transform: translateY(1px) scaleY(0.45);
+    opacity: 0.6;
+  }
+}
+
 @layer utilities {
   .app-background {
     background:
@@ -236,6 +255,12 @@ html {
 
   .form-control {
     @apply w-full rounded-2xl border border-white/10 bg-slate-950/55 px-4 py-3 text-sm text-white shadow-inner shadow-black/10 outline-none transition-colors placeholder:text-slate-500 focus:border-fuchsia-300/70 focus:ring-4 focus:ring-fuchsia-300/10;
+  }
+
+  .voice-wave-bar {
+    animation: voiceWave 0.72s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    transform-origin: center;
+    will-change: transform, opacity;
   }
 }
 

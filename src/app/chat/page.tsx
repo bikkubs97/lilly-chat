@@ -365,14 +365,33 @@ export default function ChatPage() {
 
       <div className="fixed bottom-0 left-0 right-0 z-20 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:px-6">
         <div className="glass-surface-strong mx-auto flex max-w-4xl items-end gap-3 rounded-3xl p-2">
-        <textarea
-          ref={inputRef}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyPress}
-          placeholder="Share what’s on your mind…"
-          className="min-h-[48px] max-h-[150px] flex-1 resize-none rounded-2xl border border-white/10 bg-slate-950/45 px-4 py-3 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-300/80"
-        />
+        {isRecording ? (
+          <div className="flex min-h-[48px] flex-1 items-center gap-3 rounded-2xl border border-rose-300/30 bg-rose-500/10 px-4 py-3" role="status" aria-label="Recording voice message">
+            <span className="relative flex size-2.5 shrink-0">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-rose-300 opacity-60" />
+              <span className="relative inline-flex size-2.5 rounded-full bg-rose-300" />
+            </span>
+            <div className="flex h-7 flex-1 items-center justify-center gap-1" aria-hidden="true">
+              {[15, 24, 18, 28, 20, 32, 17, 26, 14].map((height, index) => (
+                <span
+                  key={index}
+                  className="voice-wave-bar w-1 rounded-full bg-gradient-to-b from-fuchsia-200 to-rose-300"
+                  style={{ height: `${height}px`, animationDelay: `${index * -0.08}s` }}
+                />
+              ))}
+            </div>
+            <span className="shrink-0 text-xs font-medium text-rose-100">Recording</span>
+          </div>
+        ) : (
+          <textarea
+            ref={inputRef}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyPress}
+            placeholder="Share what’s on your mind…"
+            className="min-h-[48px] max-h-[150px] flex-1 resize-none rounded-2xl border border-white/10 bg-slate-950/45 px-4 py-3 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-300/80"
+          />
+        )}
         <Button
           type="button"
           onClick={toggleRecording}
@@ -393,9 +412,9 @@ export default function ChatPage() {
           <Send size={22} />
         </Button>
         </div>
-        {(isRecording || isTranscribing || voiceError) && (
+        {(isTranscribing || voiceError) && (
           <p className={`mx-auto mt-2 max-w-4xl px-3 text-xs ${voiceError ? "text-rose-200" : "text-fuchsia-100"}`} role={voiceError ? "alert" : "status"}>
-            {voiceError || (isRecording ? "Listening… tap stop when you’re finished." : "Lilly is listening…")}
+            {voiceError || "Lilly is listening…"}
           </p>
         )}
       </div>

@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { LockKeyhole, Send } from "lucide-react";
+import { LoaderCircle, LockKeyhole, Mic, Pause, Send, Square, Volume2 } from "lucide-react";
 import Header from "../_partials/header";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -30,14 +30,34 @@ export default function ChatPage() {
   const [typingIndex, setTypingIndex] = useState<number | null>(null);
   const [typingLines, setTypingLines] = useState<string[]>([]);
   const [currentLine, setCurrentLine] = useState<number>(0);
+  const [playingMessageIndex, setPlayingMessageIndex] = useState<number | null>(null);
+  const [loadingSpeechIndex, setLoadingSpeechIndex] = useState<number | null>(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [isTranscribing, setIsTranscribing] = useState(false);
+  const [voiceError, setVoiceError] = useState("");
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioUrlRef = useRef<string | null>(null);
+  const speechRequestIdRef = useRef(0);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
 
   // Scroll to bottom when messages or typing changes
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    return () => {
+      speechRequestIdRef.current += 1;
+      audioRef.current?.pause();
+      mediaRecorderRef.current?.stop();
+      mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
+      if (audioUrlRef.current) URL.revokeObjectURL(audioUrlRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     const hasUserMessages = messages.some((message) => message.role === "user");
@@ -52,8 +72,8 @@ export default function ChatPage() {
     return text.trim().charAt(0).toUpperCase() + text.trim().slice(1);
   }
 
-  async function handleSendMessage() {
-    const trimmed = input.trim();
+  async function handleSendMessage(messageText?: string, speakReply = false) {
+    const trimmed = (messageText ?? input).trim();
     if (!trimmed || isThinking) return;
 
     const token = window.localStorage.getItem("token");
@@ -96,6 +116,7 @@ export default function ChatPage() {
       setTypingIndex(assistantIndex);
       setTypingLines(lines);
       setCurrentLine(0);
+      if (speakReply) void handleSpeech(assistantIndex, reply);
 
     } catch (error) {
       console.error(error);
@@ -143,6 +164,119 @@ export default function ChatPage() {
     }
   }
 
+  async function handleSpeech(messageIndex: number, content: string) {
+    if (!content.trim()) return;
+
+    if (playingMessageIndex === messageIndex && audioRef.current) {
+      if (audioRef.current.paused) {
+        await audioRef.current.play();
+        setPlayingMessageIndex(messageIndex);
+      } else {
+        audioRef.current.pause();
+        setPlayingMessageIndex(null);
+      }
+      return;
+    }
+
+    const requestId = speechRequestIdRef.current + 1;
+    speechRequestIdRef.current = requestId;
+    audioRef.current?.pause();
+    if (audioUrlRef.current) {
+      URL.revokeObjectURL(audioUrlRef.current);
+      audioUrlRef.current = null;
+    }
+
+    setLoadingSpeechIndex(messageIndex);
+    try {
+      const response = await fetch("/api/speech", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: content }),
+      });
+      if (!response.ok) throw new Error("Unable to generate speech");
+
+      const audioUrl = URL.createObjectURL(await response.blob());
+      if (speechRequestIdRef.current !== requestId) {
+        URL.revokeObjectURL(audioUrl);
+        return;
+      }
+      audioUrlRef.current = audioUrl;
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+      audio.onended = () => setPlayingMessageIndex(null);
+      audio.onpause = () => setPlayingMessageIndex((current) => current === messageIndex ? null : current);
+      await audio.play();
+      setPlayingMessageIndex(messageIndex);
+    } catch (error) {
+      console.error("Speech playback error:", error);
+      setPlayingMessageIndex(null);
+    } finally {
+      setLoadingSpeechIndex((current) => current === messageIndex ? null : current);
+    }
+  }
+
+  async function startRecording() {
+    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
+      setVoiceError("Voice chat is not supported in this browser.");
+      return;
+    }
+
+    setVoiceError("");
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaStreamRef.current = stream;
+      const mimeType = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4"].find((type) => MediaRecorder.isTypeSupported(type));
+      const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+      const chunks: BlobPart[] = [];
+
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) chunks.push(event.data);
+      };
+      recorder.onstop = async () => {
+        mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
+        mediaStreamRef.current = null;
+        setIsRecording(false);
+
+        const recording = new Blob(chunks, { type: recorder.mimeType || "audio/webm" });
+        if (!recording.size) return;
+
+        setIsTranscribing(true);
+        try {
+          const formData = new FormData();
+          formData.append("audio", recording, "lilly-voice-message.webm");
+          const response = await fetch("/api/transcribe", { method: "POST", body: formData });
+          const data: { transcript?: string; error?: string } = await response.json();
+          if (!response.ok) throw new Error(data.error || "Unable to transcribe audio");
+          if (!data.transcript?.trim()) {
+            setVoiceError("I couldn't hear anything. Please try again.");
+            return;
+          }
+          await handleSendMessage(data.transcript, true);
+        } catch (error) {
+          console.error("Voice chat error:", error);
+          setVoiceError("I couldn't process that recording. Please try again.");
+        } finally {
+          setIsTranscribing(false);
+        }
+      };
+
+      mediaRecorderRef.current = recorder;
+      recorder.start();
+      setIsRecording(true);
+    } catch (error) {
+      console.error("Microphone error:", error);
+      setVoiceError("Please allow microphone access to talk with Lilly.");
+    }
+  }
+
+  function toggleRecording() {
+    if (isRecording) {
+      mediaRecorderRef.current?.stop();
+      return;
+    }
+    void startRecording();
+  }
+
   return (
     <div className="app-background flex min-h-screen flex-col pt-24 text-slate-100">
       <Header />
@@ -158,6 +292,7 @@ export default function ChatPage() {
                 <span className="rounded-full bg-white/8 px-4 py-2 text-sm font-semibold text-white">
                   Chat with Lilly
                 </span>
+                <span className="inline-flex items-center gap-1.5 text-sm text-fuchsia-100"><Mic className="size-3.5" />Voice chat available</span>
                 <span className="inline-flex items-center gap-1.5 text-sm text-slate-300"><LockKeyhole className="size-3.5 text-fuchsia-200" />Your conversation stays private.</span>
                 {contextStatus && (
                   <span className="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1 text-xs text-emerald-200">
@@ -178,9 +313,29 @@ export default function ChatPage() {
                       : "glass-surface rounded-bl-md text-slate-100"
                   }`}>
                     {msg.role === "assistant" ? (
-                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                        {msg.content}
-                      </ReactMarkdown>
+                      <>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          {msg.content}
+                        </ReactMarkdown>
+                        {msg.content && (
+                          <button
+                            type="button"
+                            onClick={() => handleSpeech(index, msg.content)}
+                            disabled={loadingSpeechIndex === index}
+                            aria-label={playingMessageIndex === index ? "Pause Lilly's reply" : "Listen to Lilly's reply"}
+                            className="mt-2 inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs text-fuchsia-100 transition hover:bg-white/10 disabled:cursor-wait disabled:opacity-60"
+                          >
+                            {loadingSpeechIndex === index ? (
+                              <LoaderCircle className="size-3.5 animate-spin" />
+                            ) : playingMessageIndex === index ? (
+                              <Pause className="size-3.5" />
+                            ) : (
+                              <Volume2 className="size-3.5" />
+                            )}
+                            {loadingSpeechIndex === index ? "Preparing…" : playingMessageIndex === index ? "Pause" : "Listen"}
+                          </button>
+                        )}
+                      </>
                     ) : (
                       <span className="whitespace-pre-line">{msg.content}</span>
                     )}
@@ -219,7 +374,17 @@ export default function ChatPage() {
           className="min-h-[48px] max-h-[150px] flex-1 resize-none rounded-2xl border border-white/10 bg-slate-950/45 px-4 py-3 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-300/80"
         />
         <Button
-          onClick={handleSendMessage}
+          type="button"
+          onClick={toggleRecording}
+          disabled={isThinking || isTranscribing}
+          aria-label={isRecording ? "Stop recording" : "Start voice chat"}
+          size="icon"
+          className={`self-center ${isRecording ? "bg-rose-500 hover:bg-rose-600" : ""}`}
+        >
+          {isTranscribing ? <LoaderCircle className="animate-spin" size={21} /> : isRecording ? <Square size={19} fill="currentColor" /> : <Mic size={21} />}
+        </Button>
+        <Button
+          onClick={() => void handleSendMessage()}
           disabled={!input.trim() || isThinking}
           aria-label="Send message"
           size="icon"
@@ -228,6 +393,11 @@ export default function ChatPage() {
           <Send size={22} />
         </Button>
         </div>
+        {(isRecording || isTranscribing || voiceError) && (
+          <p className={`mx-auto mt-2 max-w-4xl px-3 text-xs ${voiceError ? "text-rose-200" : "text-fuchsia-100"}`} role={voiceError ? "alert" : "status"}>
+            {voiceError || (isRecording ? "Listening… tap stop when you’re finished." : "Lilly is listening…")}
+          </p>
+        )}
       </div>
     </div>
   );

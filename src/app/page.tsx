@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Heart, HeartHandshake, LockKeyhole, MessageCircle, Zap } from "lucide-react";
+import { ArrowRight, Heart, HeartHandshake, LockKeyhole, MessageCircle, Mic, Zap } from "lucide-react";
 import { FlipWords } from "@/components/ui/shadcn-io/flip-words";
 import { GradientText } from "@/components/ui/shadcn-io/gradient-text";
 import Header from "./_partials/header";
@@ -59,6 +59,15 @@ export default function Homepage() {
           Chat with empathy, journal your thoughts, and track your emotional journey—all in one safe space. You don&apos;t have to create an account to start chatting.
         </p>
 
+        <div className="glass-surface inline-flex max-w-xl items-center gap-3 rounded-2xl px-4 py-3 text-left">
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-fuchsia-400/10 text-fuchsia-200">
+            <Mic className="size-4" aria-hidden="true" />
+          </span>
+          <p className="text-sm leading-5 text-slate-200">
+            <span className="font-semibold text-white">Voice chat is here.</span> Talk to Lilly naturally, and she&apos;ll respond out loud.
+          </p>
+        </div>
+
         {/* CTA Buttons */}
         <div className="flex flex-col gap-3 sm:flex-row">
           <Button asChild size="lg" className="px-8">
@@ -102,7 +111,7 @@ export default function Homepage() {
               </div>
               <h4 className="mb-2 text-xl font-semibold tracking-[-0.02em] text-white">Warm Chat Support</h4>
               <p className="text-sm leading-6 text-slate-300">
-                Speak with Lilly anytime, day or night. The chat is designed to feel supportive, nonjudgmental,
+                Type or talk with Lilly anytime, day or night. Voice chat lets you speak naturally and hear Lilly&apos;s response. The chat is designed to feel supportive, nonjudgmental,
                 and easy to use—whether you need a quick check-in, a safe place to vent, or helpful emotional guidance.
               </p>
             </ScrollReveal>

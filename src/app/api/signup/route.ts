@@ -4,6 +4,7 @@ import User from "@/models/user";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const EMAIL_VERIFICATION_TOKEN_TTL_MS = 24 * 60 * 60 * 1000;
 
@@ -19,12 +20,22 @@ export async function POST(request: NextRequest) {
   try {
     await connectToDatabase();
 
+    const clientIdentifier = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
+    const signupRateLimit = checkRateLimit(`signup:ip:${clientIdentifier.split(",")[0]?.trim() || "unknown"}`, 5, 60 * 60 * 1000);
+    if (!signupRateLimit.allowed) {
+      const retryAfter = Math.max(1, Math.ceil((signupRateLimit.resetAt - Date.now()) / 1000));
+      return NextResponse.json(
+        { error: "Too many signup attempts. Please wait a moment and try again." },
+        { status: 429, headers: { "Retry-After": String(retryAfter) } }
+      );
+    }
+
     const { nickname, email, password } = await request.json();
     const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
 
-    if (!nickname || !normalizedEmail || !password) {
+    if (!nickname || !normalizedEmail || typeof password !== "string" || password.length < 8 || password.length > 128) {
       return NextResponse.json(
-        { error: "Nickname, email, and password are required." },
+        { error: "Nickname, email, and password are required. Passwords must be at least 8 characters long." },
         { status: 400 }
       );
     }

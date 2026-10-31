@@ -3,12 +3,17 @@ import { NextRequest } from "next/server";
 
 export function getTokenFromRequest(req: NextRequest) {
   const authHeader = req.headers.get("authorization") || "";
-  const token = authHeader.split(" ")[1];
+  const [scheme, token] = authHeader.trim().split(/\s+/);
+
+  if (!scheme || !token || scheme.toLowerCase() !== "bearer") {
+    return "";
+  }
+
   return token;
 }
 
 export function verifyToken(token: string) {
-  if (!token) {
+  if (!token || typeof token !== "string") {
     throw new Error("Missing auth token");
   }
 

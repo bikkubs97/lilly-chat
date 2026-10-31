@@ -3,6 +3,7 @@ import connectToDatabase from "@/lib/mongodb"; // your Mongoose connection helpe
 import User from "@/models/user"; // your Mongoose User model
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { checkRateLimit, getRequestIdentifier } from "@/lib/rate-limit";
 
 function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -20,11 +21,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const clientIdentifier = getRequestIdentifier(req);
+    const loginRateLimit = checkRateLimit(`login:ip:${clientIdentifier}`, 10, 60_000);
+    if (!loginRateLimit.allowed) {
+      const retryAfter = Math.max(1, Math.ceil((loginRateLimit.resetAt - Date.now()) / 1000));
+      return NextResponse.json(
+        { error: "Too many login attempts. Please wait a moment and try again." },
+        { status: 429, headers: { "Retry-After": String(retryAfter) } }
+      );
+    }
+
     const body = await req.json();
     const { email, password } = body;
     const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
 
-    if (!normalizedEmail || !password) {
+    if (!normalizedEmail || typeof password !== "string" || password.length < 8) {
       return NextResponse.json(
         { error: "Email and password are required" },
         { status: 400 }

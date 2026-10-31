@@ -16,9 +16,9 @@ const moodEntrySchema = new Schema({
 
 const userSchema = new Schema({
   nickname: { type: String },
-  email: { type: String, required: true },
+  email: { type: String, required: true, unique: true, lowercase: true, trim: true },
   password: { type: String, required: true },
-  emailVerified: { type: Boolean, default: true },
+  emailVerified: { type: Boolean, default: false },
   emailVerifiedAt: { type: Date },
   emailVerificationToken: { type: String, select: false },
   emailVerificationExpires: { type: Date, select: false },

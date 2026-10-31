@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { getTokenFromRequest, verifyToken } from "@/lib/auth";
 import { buildPersonalContextBlock, getPersonalContext } from "@/lib/personal-context";
+import { checkRateLimit, getRequestIdentifier } from "@/lib/rate-limit";
 
 const LILLY_SYSTEM_PROMPT = `You are Lilly, a warm and empathetic mental-wellness companion.
 
@@ -23,6 +24,17 @@ export async function POST(req: NextRequest) {
     const { messages } = await req.json();
     const token = getTokenFromRequest(req);
     const decoded = token ? verifyToken(token) : null;
+    const clientIdentifier = getRequestIdentifier(req);
+    const rateLimitKey = decoded?.userId ? `chat:user:${decoded.userId}` : `chat:ip:${clientIdentifier}`;
+    const rateLimit = checkRateLimit(rateLimitKey, 20, 60_000);
+
+    if (!rateLimit.allowed) {
+      const retryAfter = Math.max(1, Math.ceil((rateLimit.resetAt - Date.now()) / 1000));
+      return NextResponse.json(
+        { error: "Too many chat requests. Please wait a moment and try again." },
+        { status: 429, headers: { "Retry-After": String(retryAfter) } }
+      );
+    }
 
     if (!process.env.OPENAI_API_KEY) {
       return NextResponse.json({ error: "API key not configured" }, { status: 500 });
@@ -30,15 +42,31 @@ export async function POST(req: NextRequest) {
 
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-    if (!messages || !Array.isArray(messages)) {
+    if (!messages || !Array.isArray(messages) || messages.length === 0 || messages.length > 20) {
       return NextResponse.json({ error: "Invalid messages" }, { status: 400 });
     }
 
-    const conversationHistory = messages
-      .filter((message): message is { role: "user" | "assistant"; content: string } => (
-        (message?.role === "user" || message?.role === "assistant") && typeof message.content === "string"
-      ))
-      .slice(-12);
+    const conversationHistory = messages.reduce<{ role: "user" | "assistant"; content: string }[]>((accumulator, message) => {
+      if (!message || typeof message !== "object") {
+        return accumulator;
+      }
+
+      const role = message.role;
+      const content = typeof message.content === "string" ? message.content.trim() : "";
+
+      if ((role === "user" || role === "assistant") && content) {
+        accumulator.push({
+          role,
+          content: content.slice(0, 4000),
+        });
+      }
+
+      return accumulator;
+    }, []).slice(-12);
+
+    if (conversationHistory.length === 0) {
+      return NextResponse.json({ error: "A user message is required" }, { status: 400 });
+    }
 
     const latestUserMessage = [...conversationHistory].reverse().find((message) => message.role === "user");
     if (!latestUserMessage?.content.trim()) {

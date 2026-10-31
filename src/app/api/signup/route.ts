@@ -7,6 +7,7 @@ import crypto from "crypto";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 const EMAIL_VERIFICATION_TOKEN_TTL_MS = 24 * 60 * 60 * 1000;
+const strongPasswordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&^_-]).*$/;
 
 function hashVerificationToken(token: string) {
   return crypto.createHash("sha256").update(token).digest("hex");
@@ -33,9 +34,16 @@ export async function POST(request: NextRequest) {
     const { nickname, email, password } = await request.json();
     const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
 
-    if (!nickname || !normalizedEmail || typeof password !== "string" || password.length < 8 || password.length > 128) {
+    if (!nickname || !normalizedEmail || typeof password !== "string" || password.length < 6 || password.length > 128) {
       return NextResponse.json(
-        { error: "Nickname, email, and password are required. Passwords must be at least 8 characters long." },
+        { error: "Nickname, email, and password are required. Passwords must be at least 6 characters long." },
+        { status: 400 }
+      );
+    }
+
+    if (!strongPasswordRegex.test(password)) {
+      return NextResponse.json(
+        { error: "Password must contain at least one letter, one number, and one special character." },
         { status: 400 }
       );
     }

@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     const { email, password } = body;
     const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
 
-    if (!normalizedEmail || typeof password !== "string" || password.length < 8) {
+    if (!normalizedEmail || typeof password !== "string" || password.length < 6) {
       return NextResponse.json(
         { error: "Email and password are required" },
         { status: 400 }
